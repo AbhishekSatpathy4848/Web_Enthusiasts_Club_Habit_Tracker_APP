@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/Habit.dart';
+import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/pages/Home.dart';
 import 'package:habit_tracker/pages/login_screen.dart';
 import 'package:habit_tracker/pages/registration_screen.dart';
@@ -13,7 +13,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final Future<FirebaseApp> _fbApp = await Firebase.initializeApp();
+  
   await Hive.initFlutter();
+  
+  Hive.registerAdapter(HabitAdapter());
+  await Hive.openBox<Habit>('habits');
+
   await Firebase.initializeApp();
 
   runApp(MaterialApp(home: LoginCheck(), routes: {

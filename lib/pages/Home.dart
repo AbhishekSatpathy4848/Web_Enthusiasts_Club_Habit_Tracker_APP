@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/Habit.dart';
+import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/pages/HabitList.dart';
 import 'package:habit_tracker/pages/Profile.dart';
 import 'package:habit_tracker/pages/login_screen.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,15 +14,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  callback(Habit newHabit) {
-    setState(() {
-      // listHabits.add(newHabit);
-    });
-  }
+  // callback(Habit newHabit) {
+  //   setState(() {
+  //     // listHabits.add(newHabit);
+  //   });
+  // }
 
   int index = 0;
-  final screen = [HabitList(),const Login(),Profile()];
-  
+  final screen = [HabitList(), const Login(), Profile()];
+
+  @override
+  void dispose() {
+    super.dispose();
+    Hive.close();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +37,10 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.grey[900],
         title: const Text("Habit Tracker"),
         centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.add_circle_outline))
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {}, icon: const Icon(Icons.add_circle_outline))
+        // ],
       ),
       body: screen[index],
       bottomNavigationBar:
