@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/Habit.dart';
 import 'package:habit_tracker/pages/HabitList.dart';
+import 'package:habit_tracker/pages/Profile.dart';
 import 'package:habit_tracker/pages/login_screen.dart';
 
 class Home extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HomeState extends State<Home> {
   }
 
   int index = 0;
-  final screen = [HabitList(),const Login()];
+  final screen = [HabitList(),const Login(),Profile()];
   
 
   @override
@@ -56,7 +57,11 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
               icon: Icon(Icons.query_stats),
               label: "Stats",
-              backgroundColor: Colors.blue)
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Profile",
+              backgroundColor: Colors.black)
         ],
         onTap: (value) {
           setState(() {

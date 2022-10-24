@@ -16,11 +16,9 @@ class _LoginState extends State<Login> {
   // }
 
   Future signIn() async {
-    print("ewew");
     await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: userNameController.text.trim(),
         password: passwordController.text.trim());
-    print("heuifr");
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -42,7 +40,7 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Text('$userName and $password'),
+              // Text('$userName and $password'),
               const SizedBox(height: 20),
               TextFormField(
                 validator: (value) {
@@ -91,14 +89,13 @@ class _LoginState extends State<Login> {
               RawMaterialButton(
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 onPressed: () {
-                  setState(() {
-                    userName = userNameController.text.trim();
-                    password = passwordController.text.trim();
-                    // rint("ewybgyw");
+                    // userName = userNameController.text.trim();
+                    // password = passwordController.text.trim();
                     signIn();
-                  });
                 },
                 fillColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
@@ -110,8 +107,6 @@ class _LoginState extends State<Login> {
                       Text("Sign In",
                           style: TextStyle(color: Colors.white, fontSize: 18)),
                     ]),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
               ),
               Row(
                 children: [
@@ -122,7 +117,7 @@ class _LoginState extends State<Login> {
                         //   if(_formKey.currentState!.validate())
                         //     return;
                         // }
-                        // Navigator.pushNamed(context, '/register');
+                        Navigator.pushNamed(context, '/register');
                       },
                       child: const Text("Create Account"))
                 ],

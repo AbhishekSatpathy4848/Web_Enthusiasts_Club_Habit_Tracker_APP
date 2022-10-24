@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -12,9 +15,16 @@ class _RegistrationState extends State<Registration> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  String userName = '';
-  String password = '';
-  String confirmPassword = '';
+  // String userName = '';
+  // String password = '';
+  // String confirmPassword = '';
+
+  Future registerUser() async {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: userNameController.text.trim(),
+        password: passwordController.text.trim());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,16 +35,16 @@ class _RegistrationState extends State<Registration> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text('$userName and $password'),
+            // Text('$userName and $password'),
             const SizedBox(height: 20),
             TextFormField(
-               validator: ((value) {
-                if(value == null || value.isEmpty) {
+              validator: ((value) {
+                if (value == null || value.isEmpty) {
                   return 'Please enter some text';
                 } else {
                   return null;
                 }
-              }) ,
+              }),
               controller: userNameController,
               style: const TextStyle(
                   // color: Colors.grey[600]
@@ -52,13 +62,13 @@ class _RegistrationState extends State<Registration> {
             ),
             const SizedBox(height: 30),
             TextFormField(
-               validator: ((value) {
-                if(value == null || value.isEmpty) {
+              validator: ((value) {
+                if (value == null || value.isEmpty) {
                   return 'Please enter some text';
                 } else {
                   return null;
                 }
-              }) ,
+              }),
               controller: passwordController,
               obscureText: true,
               decoration: const InputDecoration(
@@ -70,13 +80,13 @@ class _RegistrationState extends State<Registration> {
             ),
             const SizedBox(height: 30),
             TextFormField(
-               validator: ((value) {
-                if(value == null || value.isEmpty) {
+              validator: ((value) {
+                if (value == null || value.isEmpty) {
                   return 'Please enter some text';
                 } else {
                   return null;
                 }
-              }) ,
+              }),
               controller: confirmPasswordController,
               obscureText: true,
               decoration: const InputDecoration(
@@ -88,20 +98,31 @@ class _RegistrationState extends State<Registration> {
             ),
             const SizedBox(height: 30),
             RawMaterialButton(
-              onPressed: () {
-                setState(() {
-                  userName = userNameController.text.trim();
-                  password = passwordController.text.trim();
-                  confirmPassword = confirmPasswordController.text.trim();
-                  if (password == confirmPassword) {
-                    //TODO: Register user with Firebase
-                  }
-                });
+              onPressed: () async {
+                // if(passwordController.text.trim().isNotEmpty == confirmPasswordController.text.trim().isNotEmpty){
+                if (passwordController.text.trim() ==
+                    confirmPasswordController.text.trim()) {
+                  if (passwordController.text.trim().length >= 6) {
+                    await registerUser();
+                    Navigator.of(context).pop();
+                  }else{
+                      Fluttertoast.showToast(
+                      msg: "Passwords should be more than 6 characters long!!",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER);
+                    }
+                } else {
+                  Fluttertoast.showToast(
+                    msg: "Passwords don't Match!!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                  );
+                }
               },
               fillColor: Colors.blue,
-              child: const Text("Register"),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
+              child: const Text("Register"),
             ),
           ],
         ),

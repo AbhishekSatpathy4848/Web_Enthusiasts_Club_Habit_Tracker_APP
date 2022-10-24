@@ -1,3 +1,5 @@
+import 'package:hive/hive.dart';
+// part 'Habit.g.dart';
 class Habit {
   String? name;
   // Duration? start;
