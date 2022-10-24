@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  activity_ring:
+    dependency: "direct main"
+    description:
+      name: activity_ring
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   async:
     dependency: transitive
     description:
