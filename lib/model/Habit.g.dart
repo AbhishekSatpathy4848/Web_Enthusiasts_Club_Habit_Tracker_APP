@@ -18,6 +18,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
     };
     return Habit(
       fields[0] as String,
+      fields[1] as Color
     );
   }
 

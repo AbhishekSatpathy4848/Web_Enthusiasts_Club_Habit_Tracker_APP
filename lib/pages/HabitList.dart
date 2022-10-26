@@ -8,6 +8,7 @@ import 'package:habit_tracker/model/Habit.dart';
 import 'package:hive/hive.dart';
 import 'package:habit_tracker/boxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class HabitList extends StatefulWidget {
   HabitList({super.key});
@@ -19,8 +20,11 @@ class HabitList extends StatefulWidget {
 class _HabitListState extends State<HabitList> {
   // List<Habit> listHabits = [Habit("habit1"), Habit("habit2")];
 
-  addHabit(String name) {
-    final habit = Habit(name);
+  // final VoidCallback addHabit;
+  Color color = Colors.blue;
+
+  addHabit(String name, Color color) {
+    final habit = Habit(name, color);
     final box = Boxes.getHabits();
     box.add(habit);
   }
@@ -29,33 +33,141 @@ class _HabitListState extends State<HabitList> {
     habit.delete();
   }
 
-  AlertDialog BuildAlert(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showHabitCreationDialog(context);
+            },
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            child: const Icon(Icons.add)),
+        body: Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0.0),
+            child: ValueListenableBuilder(
+                valueListenable: Boxes.getHabits().listenable(),
+                builder: ((context, box, widget) {
+                  List<Habit> habitlist = box.values.toList();
+                  return ListView.builder(
+                    itemCount: Boxes.getHabits().keys.length,
+                    itemBuilder: ((context, index) {
+                      return Card(
+                          child: ListTile(
+                              title: Text(habitlist[index].name.toString()),
+                              leading: Container(
+                                width: 10,
+                                height: 40,
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: habitlist[index].color),
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () => deleteHabit(habitlist[index]),
+                              ),
+                              onLongPress: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                            sigmaX: 5, sigmaY: 5),
+                                        child: Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0)),
+                                          backgroundColor: Colors.grey[900],
+                                          child: dialogContent(index),
+                                        ),
+                                      );
+                                    });
+                              }));
+                      // }));
+                    }),
+                  );
+                }))));
+  }
+
+  showHabitCreationDialog(BuildContext context) {
     final controller = TextEditingController();
 
-    return AlertDialog(
-      title: const Text(
-        "Add a Habit",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-      ),
-      elevation: 100,
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            controller: controller,
-          )
-        ],
-      ),
-      actions: [
-        TextButton(
-            onPressed: () {
-              // callbackFunction(Habit(controller.text.trim()));
-              addHabit(controller.text.trim());
-              Navigator.of(context).pop();
-            },
-            child: const Text("Create Habit")),
-      ],
-    );
+    showDialog(
+        context: context,
+        builder: (context) {
+          // return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: const Text(
+                "Add a Habit",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              elevation: 100,
+              content: StatefulBuilder(builder: (context,setState) { 
+                return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: controller,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            // setState() {
+                            // showColorPickerDialog(context);
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Pick your Habit color"),
+                                    content: Column(
+                                      children: [
+                                        ColorPicker(
+                                            pickerColor: color,
+                                            onColorChanged: (color) {
+                                              setState(() {
+                                                this.color = color;
+                                              });
+                                            })
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("Done"))
+                                    ],
+                                  );
+                                });
+                            },
+                          // },
+                          child: const Text("Choose Color")),
+                      Container(
+                        decoration:
+                            BoxDecoration(shape: BoxShape.circle, color: color),
+                        width: 20,
+                        height: 20,
+                      )
+                    ],
+                  )
+                ],
+              );
+            }
+            ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      // callbackFunction(Habit(controller.text.trim()));
+                      addHabit(controller.text.trim(), color);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Create Habit")),
+              ],
+            );
+          // }
+          // );
+        });
   }
 
   Widget dialogContent(int index) {
@@ -123,63 +235,5 @@ class _HabitListState extends State<HabitList> {
             )));
   }
 
-  // final VoidCallback addHabit;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                  context: context, builder: (context) => BuildAlert(context));
-            },
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)),
-            child: const Icon(Icons.add)),
-        body: Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0.0),
-            child: ValueListenableBuilder(
-            valueListenable: Boxes.getHabits().listenable(),
-            builder: ((context, box, widget) {
-              List<Habit> habitlist = box.values.toList();
-              return ListView.builder(
-                itemCount: Boxes.getHabits().keys.length,
-                itemBuilder: ((context, index) {
-                        return Card(
-                            child: ListTile(
-                                title: Text(habitlist[index].name.toString()),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () => deleteHabit(habitlist[index]),
-                                ),
-                                onLongPress: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                              sigmaX: 5, sigmaY: 5),
-                                          child: Container(
-                                            // width: 350,
-                                            // height: 150,
-                                            child: Dialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          15.0)),
-                                              backgroundColor: Colors.grey[900],
-                                              child: dialogContent(index),
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                }));
-                      // }));
-                }),
-              );
-            }
-          )
-       )
-      )
-    );
-  }
+  // showColorPickerDialog(BuildContext context) {}
 }
