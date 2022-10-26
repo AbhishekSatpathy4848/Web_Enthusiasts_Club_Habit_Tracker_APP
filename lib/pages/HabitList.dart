@@ -25,6 +25,10 @@ class _HabitListState extends State<HabitList> {
     box.add(habit);
   }
 
+  deleteHabit(Habit habit) {
+    habit.delete();
+  }
+
   AlertDialog BuildAlert(BuildContext context) {
     final controller = TextEditingController();
 
@@ -123,54 +127,59 @@ class _HabitListState extends State<HabitList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-                context: context, builder: (context) => BuildAlert(context));
-          },
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          child: const Icon(Icons.add)),
-
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0.0),
-          child: ListView.builder(
-            itemCount: Boxes.getHabits().keys.length,
-            itemBuilder: ((context, index) {
-              return ValueListenableBuilder(
-                  valueListenable: Boxes.getHabits().listenable(),
-                  builder: ((context, box, widget) {
-                    List<Habit> habitlist = box.values.toList();
-                    return Card(
-                  child: ListTile(
-                title: Text(habitlist[index].name.toString()),
-                onLongPress: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          child: Container(
-                            // width: 350,
-                            // height: 150,
-                            child: Dialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0)),
-                              backgroundColor: Colors.grey[900],
-                              child: dialogContent(index),
-                            ),
-                          ),
-                        );
-                      } 
-                    );
-                  })
-                );
-                })
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showDialog(
+                  context: context, builder: (context) => BuildAlert(context));
+            },
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            child: const Icon(Icons.add)),
+        body: Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0.0),
+            child: ValueListenableBuilder(
+            valueListenable: Boxes.getHabits().listenable(),
+            builder: ((context, box, widget) {
+              List<Habit> habitlist = box.values.toList();
+              return ListView.builder(
+                itemCount: Boxes.getHabits().keys.length,
+                itemBuilder: ((context, index) {
+                        return Card(
+                            child: ListTile(
+                                title: Text(habitlist[index].name.toString()),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => deleteHabit(habitlist[index]),
+                                ),
+                                onLongPress: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: 5, sigmaY: 5),
+                                          child: Container(
+                                            // width: 350,
+                                            // height: 150,
+                                            child: Dialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0)),
+                                              backgroundColor: Colors.grey[900],
+                                              child: dialogContent(index),
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                }));
+                      // }));
+                }),
               );
             }
-          ),
-        )
+          )
+       )
       )
-      );
-      }
+    );
   }
+}
