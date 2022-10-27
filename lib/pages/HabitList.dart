@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:activity_ring/activity_ring.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:habit_tracker/Metrics.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:hive/hive.dart';
 import 'package:habit_tracker/boxes.dart';
@@ -15,6 +16,7 @@ import 'package:date_format/date_format.dart';
 import 'package:habit_tracker/getDayDifference.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math';
+import 'package:checkmark/checkmark.dart';
 
 class HabitList extends StatefulWidget {
   HabitList({super.key});
@@ -30,6 +32,7 @@ class _HabitListState extends State<HabitList>
   // final VoidCallback addHabit;
   late Color color;
   late AnimationController animationController;
+  // bool isTicked = false;
 
   @override
   void initState() {
@@ -45,8 +48,14 @@ class _HabitListState extends State<HabitList>
   }
 
   addHabit(String name, Color color, int goalDays) {
-    final habit =
-        Habit(name, color, DateTime.now(), DateTime.now(), 0, 0, goalDays, []);
+    final habit = Habit(
+        name,
+        color,
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        0,
+        0,
+        goalDays, []);
     // habit.addToCompletedDays(dateTime)
     final box = Boxes.getHabits();
     box.add(habit);
@@ -76,7 +85,8 @@ class _HabitListState extends State<HabitList>
   }
 
   bool ishabitAlreadyRegistered(Habit habit, DateTime currentDate) {
-    return daysBetween(habit.streakStartDate!, currentDate) > habit.streaks;
+    // return daysBetween(habit.streakStartDate!, currentDate) > habit.streaks;
+    return habit.completedDays.contains(currentDate);
   }
 
   void addCompletedDate(Habit habit, DateTime currentDate) {
@@ -112,7 +122,7 @@ class _HabitListState extends State<HabitList>
     } else if (daysBetween(habitlist[index].streakStartDate!, currentDate) >
         habitlist[index].streaks) {
       editHabitStreakBeginDate(habitlist[index], currentDate);
-      showCompletedAnimationDialog();
+      // showCompletedAnimationDialog();
       editHabitStreaks(habitlist[index], 1);
     }
   }
@@ -129,9 +139,9 @@ class _HabitListState extends State<HabitList>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromRGBO(26, 26, 26, 1),
+        backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
         floatingActionButton: FloatingActionButton(
-            backgroundColor: Color.fromRGBO(40, 40, 40, 1),
+            backgroundColor: const Color.fromRGBO(40, 40, 40, 1),
             foregroundColor: Colors.blue,
             onPressed: () {
               // NotificationApi.showNotification(
@@ -140,7 +150,7 @@ class _HabitListState extends State<HabitList>
               showHabitCreationDialog(context);
             },
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)),
+                borderRadius: BorderRadius.circular(15.0)),
             child: const Icon(Icons.add)),
         body: Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0.0),
@@ -151,11 +161,14 @@ class _HabitListState extends State<HabitList>
                   return ListView.builder(
                     itemCount: Boxes.getHabits().keys.length,
                     itemBuilder: ((context, index) {
-                      final currentDate = DateTime.now();
+                      final currentDate = DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day);
                       return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0)),
                                 color: const Color.fromRGBO(40, 40, 40, 1),
                                 child: ListTile(
                                     title: Column(
@@ -169,10 +182,10 @@ class _HabitListState extends State<HabitList>
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
-                                            Text(formatDate(
-                                                habitlist[index]
-                                                    .streakStartDate!,
-                                                [dd, '-', mm, '-', yyyy])),
+                                            // Text(formatDate(
+                                            //     habitlist[index]
+                                            //         .streakStartDate!,
+                                            //     [dd, '-', mm, '-', yyyy])),
                                           ],
                                         ),
                                         // Text("hey")
@@ -189,21 +202,51 @@ class _HabitListState extends State<HabitList>
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        IconButton(
-                                            onPressed: () {
-                                              if (!ishabitAlreadyRegistered(
-                                                  habitlist[index],
-                                                  currentDate)) {
-                                                animationController.forward();
-                                                markHabitProgress(habitlist,
-                                                    index, currentDate);
-                                              } else {
-                                                print(
-                                                    "Already registerered for the day");
-                                              }
-                                            },
-                                            icon: chooseIcon(
-                                                habitlist, index, currentDate)),
+                                        // IconButton(
+                                        //     onPressed: () {
+                                        //       if (!ishabitAlreadyRegistered(
+                                        //           habitlist[index],
+                                        //           currentDate)) {
+                                        //         // animationController.forward();
+                                        //         markHabitProgress(habitlist,
+                                        //             index, currentDate);
+                                        //       } else {
+                                        //         print(
+                                        //             "Already registerered for the day");
+                                        //       }
+                                        //     },
+                                        //     // icon: chooseIcon(
+                                        //     //     habitlist, index, currentDate)),
+                                        //     icon: ),
+                                        GestureDetector(
+                                              onTap: () {
+                                                // setState(() {
+                                                  // isTicked = !isTicked;
+                                                  // print(isTicked);
+                                                  if (!ishabitAlreadyRegistered(habitlist[index],currentDate)) {
+                                                    markHabitProgress(habitlist,index, currentDate);
+                                                  } else {
+                                                  print("Already registerered for the day");
+                                                }
+                                              // });
+                                              },
+                                              child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child: CheckMark(
+                                                  active: ishabitAlreadyRegistered(habitlist[index],currentDate),
+                                                  curve: Curves.decelerate,
+                                                  strokeWidth: 3,
+                                                  activeColor:
+                                                      const Color.fromARGB(
+                                                          255, 62, 236, 67),
+                                                  // strokeJoin: StrokeJoin.miter,
+                                                  duration: const Duration(
+                                                      milliseconds: 500),
+                                                ),
+                                              ),
+                                            ),
+                                          const SizedBox(width: 10),
                                         IconButton(
                                           icon: const Icon(Icons.delete,
                                               color: Color.fromARGB(
@@ -227,7 +270,8 @@ class _HabitListState extends State<HabitList>
                                                             15.0)),
                                                 backgroundColor:
                                                     Colors.grey[900],
-                                                child: dialogContent(index),
+                                                child: dialogContent(
+                                                    habitlist[index], context),
                                               ),
                                             );
                                           });
@@ -272,7 +316,7 @@ class _HabitListState extends State<HabitList>
                       // hintText: 'Enter Your Password',
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: goalDaysController,
                     decoration: const InputDecoration(
@@ -340,19 +384,19 @@ class _HabitListState extends State<HabitList>
         });
   }
 
-  Widget dialogContent(int index) {
+  Widget dialogContent(Habit habit, BuildContext context) {
     return Container(
-        width: 300,
+        width: MediaQuery.of(context).size.width,
         height: 260,
         child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: Column(
               children: [
-                // Text(listHabits[index].name.toString(),
-                //     style: const TextStyle(
-                //         color: Colors.white,
-                //         fontSize: 18,
-                //         fontWeight: FontWeight.bold)),
+                Text(habit.name.toString(),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
                 const SizedBox(height: 30),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Column(
@@ -360,44 +404,48 @@ class _HabitListState extends State<HabitList>
                       children: [
                         const SizedBox(height: 40),
                         Ring(
-                          percent: 50,
+                          percent: Metrics.getProgressRate(habit).toDouble(),
                           color: RingColorScheme(
                               ringColor:
                                   const Color.fromARGB(255, 237, 183, 5)),
                           width: 15,
                           radius: 50,
                           child: Center(
-                              child: Text("50%",
-                                  style: TextStyle(color: Colors.white))),
+                              child: Text(
+                                  "${Metrics.getProgressRate(habit).toString()}%",
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 16))),
                         ),
                         // ),
                         const SizedBox(height: 70),
                         const Text(
                           "Progress Rate",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         )
                       ]),
-                  const SizedBox(width: 60),
+                  const SizedBox(width: 50),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(height: 40),
                         Ring(
-                          percent: 100,
+                          percent: Metrics.getSuccessRate(habit).toDouble(),
                           color: RingColorScheme(
                               ringColor:
                                   const Color.fromARGB(255, 15, 232, 127)),
                           width: 15,
                           radius: 50,
                           child: Center(
-                              child: Text("100%",
-                                  style: TextStyle(color: Colors.white))),
+                              child: Text(
+                                  "${Metrics.getSuccessRate(habit).toString()}%",
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 16))),
                         ),
                         // ),
                         const SizedBox(height: 70),
                         const Text(
                           "Success Rate",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         )
                       ]),
                 ]),

@@ -48,6 +48,7 @@ class SuccessRateChart extends StatelessWidget {
     return bars;
   }
 
+
   @override
   Widget build(BuildContext context) {
     List<Habit> habitList = Boxes.getHabits().values.toList();
@@ -66,8 +67,24 @@ class SuccessRateChart extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: buildCharts(habitList, context),
             )),
+            const SizedBox(height: 40),
+            Text("Progress Rate",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 22, color: amber)),
+            // SizedBox(width: 40),
+            Container(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: buildCharts(habitList, context),
+            )),
           ],
         ),
+
+
+
+
+
+
       ),
     );
   }
