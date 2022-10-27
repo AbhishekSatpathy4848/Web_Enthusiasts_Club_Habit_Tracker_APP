@@ -15,16 +15,20 @@ void main() async {
 
   await Firebase.initializeApp();
 
-    await Hive.initFlutter();
-    Hive.registerAdapter(HabitAdapter());
-    await Hive.openBox<Habit>('habits');
+  await Hive.initFlutter();
+  Hive.registerAdapter(HabitAdapter());
+  await Hive.openBox<Habit>('habits');
 
   runApp(MaterialApp(home: LoginCheck(), routes: {
     '/login': (context) => Login(),
     '/register': (context) => Registration(),
     '/home': (context) => Home(),
+
+
+
   }));
 }
+
 
 class LoginCheck extends StatelessWidget {
   const LoginCheck({super.key});
@@ -39,9 +43,10 @@ class LoginCheck extends StatelessWidget {
               //   return Center(child: CircularProgressIndicator());
               // }
               if (snapshot.hasData) {
-                // print("Login Successful");
+                print("Login Successful");
                 return const Home();
               } else if (snapshot.hasError) {
+                print("Error");
                 Fluttertoast.showToast(
                   msg: "There was an Error in Logging you in!!",
                   toastLength: Toast.LENGTH_SHORT,
@@ -49,7 +54,7 @@ class LoginCheck extends StatelessWidget {
                 );
                 return const Login();
               } else {
-                // print("No Data");
+                print("No Data");
                 return const Login();
               }
             })));

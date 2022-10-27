@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/model/Habit.dart';
+import 'package:habit_tracker/localNotificationService.dart';
 import 'package:habit_tracker/pages/HabitList.dart';
 import 'package:habit_tracker/pages/Profile.dart';
+import 'package:habit_tracker/pages/Statistics.dart';
 import 'package:habit_tracker/pages/login_screen.dart';
+import 'package:habit_tracker/localNotificationService.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -21,7 +24,7 @@ class _HomeState extends State<Home> {
   // }
 
   int index = 0;
-  final screen = [HabitList(), const Login(), Profile()];
+  final screen = [HabitList(), Stats(), Profile()];
 
   @override
   void dispose() {
@@ -39,7 +42,10 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         // actions: [
         //   IconButton(
-        //       onPressed: () {}, icon: const Icon(Icons.add_circle_outline))
+        //       onPressed: () {
+
+        //       },
+        //       icon: const Icon(Icons.add_circle_outline))
         // ],
       ),
       body: screen[index],
@@ -53,22 +59,23 @@ class _HomeState extends State<Home> {
         // backgroundColor: Colors.red,
         type: BottomNavigationBarType.shifting,
         currentIndex: index,
-        selectedItemColor: Colors.white,
+        elevation: 0,
+        selectedItemColor: Colors.amberAccent[200],
         unselectedItemColor: Colors.white.withOpacity(0.7),
         // height: 60,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Home",
-              backgroundColor: Colors.amber),
+              backgroundColor: Color.fromRGBO(26, 26, 26, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.query_stats),
               label: "Stats",
-              backgroundColor: Colors.blue),
+              backgroundColor: Color.fromRGBO(26, 26, 26, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: "Profile",
-              backgroundColor: Colors.black)
+              backgroundColor: Color.fromRGBO(26, 26, 26, 1))
         ],
         onTap: (value) {
           setState(() {

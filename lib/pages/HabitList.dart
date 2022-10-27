@@ -7,8 +7,14 @@ import 'package:flutter/rendering.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:hive/hive.dart';
 import 'package:habit_tracker/boxes.dart';
+import 'package:habit_tracker/localNotificationService.dart';
+// import 'package:habit_tracker/NotificationAPI.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:date_format/date_format.dart';
+import 'package:habit_tracker/getDayDifference.dart';
+import 'package:lottie/lottie.dart';
+import 'dart:math';
 
 class HabitList extends StatefulWidget {
   HabitList({super.key});
@@ -17,27 +23,120 @@ class HabitList extends StatefulWidget {
   State<HabitList> createState() => _HabitListState();
 }
 
-class _HabitListState extends State<HabitList> {
+class _HabitListState extends State<HabitList>
+    with SingleTickerProviderStateMixin {
   // List<Habit> listHabits = [Habit("habit1"), Habit("habit2")];
 
   // final VoidCallback addHabit;
-  Color color = Colors.blue;
+  late Color color;
+  late AnimationController animationController;
 
-  addHabit(String name, Color color) {
-    final habit = Habit(name, color);
+  @override
+  void initState() {
+    super.initState();
+    setColorChoice();
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+  }
+
+  setColorChoice() {
+    color = Color.fromRGBO(
+        Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
+  }
+
+  addHabit(String name, Color color, int goalDays) {
+    final habit =
+        Habit(name, color, DateTime.now(), DateTime.now(), 0, 0, goalDays, []);
+    // habit.addToCompletedDays(dateTime)
     final box = Boxes.getHabits();
     box.add(habit);
+    setColorChoice();
   }
 
   deleteHabit(Habit habit) {
     habit.delete();
   }
 
+  void editHabitStreaks(Habit habit, int streaks) {
+    habit.streaks = streaks;
+    print(habit.streaks);
+    habit.save();
+  }
+
+  void editHabitStreakBeginDate(Habit habit, DateTime currentDate) {
+    habit.streakStartDate = currentDate;
+    // print(habit.streaks);
+    habit.save();
+  }
+
+  void updateMaxStreak(Habit habit, int maxStreaks) {
+    habit.maxStreaks = maxStreaks;
+    // print(habit.streaks);
+    habit.save();
+  }
+
+  bool ishabitAlreadyRegistered(Habit habit, DateTime currentDate) {
+    return daysBetween(habit.streakStartDate!, currentDate) > habit.streaks;
+  }
+
+  void addCompletedDate(Habit habit, DateTime currentDate) {
+    habit.completedDays.add(currentDate);
+    habit.save();
+  }
+
+  void showCompletedAnimationDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
+                backgroundColor: Colors.grey[900],
+                child: Lottie.network(
+                    "https://assets5.lottiefiles.com/packages/lf20_q7hiluze.json"),
+              ));
+        });
+  }
+
+  void markHabitProgress(
+      List<Habit> habitlist, int index, DateTime currentDate) {
+    if (daysBetween(habitlist[index].streakStartDate!, currentDate) ==
+        habitlist[index].streaks) {
+      editHabitStreaks(habitlist[index], habitlist[index].streaks + 1);
+      addCompletedDate(habitlist[index], currentDate);
+      if (habitlist[index].maxStreaks < habitlist[index].streaks) {
+        updateMaxStreak(habitlist[index], habitlist[index].streaks);
+      }
+    } else if (daysBetween(habitlist[index].streakStartDate!, currentDate) >
+        habitlist[index].streaks) {
+      editHabitStreakBeginDate(habitlist[index], currentDate);
+      showCompletedAnimationDialog();
+      editHabitStreaks(habitlist[index], 1);
+    }
+  }
+
+  Widget chooseIcon(habitlist, index, currentDate) {
+    if (ishabitAlreadyRegistered(habitlist[index], currentDate)) {
+      return const Icon(Icons.check, color: Color.fromARGB(255, 62, 236, 67));
+    } else {
+      return AnimatedIcon(
+          icon: AnimatedIcons.arrow_menu, progress: animationController);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color.fromRGBO(26, 26, 26, 1),
         floatingActionButton: FloatingActionButton(
+            backgroundColor: Color.fromRGBO(40, 40, 40, 1),
+            foregroundColor: Colors.blue,
             onPressed: () {
+              // NotificationApi.showNotification(
+              //       title: "First Flutter Notification",
+              //       body: "We are building the IRIS Flutter Project");
               showHabitCreationDialog(context);
             },
             shape: RoundedRectangleBorder(
@@ -52,35 +151,93 @@ class _HabitListState extends State<HabitList> {
                   return ListView.builder(
                     itemCount: Boxes.getHabits().keys.length,
                     itemBuilder: ((context, index) {
-                      return Card(
-                          child: ListTile(
-                              title: Text(habitlist[index].name.toString()),
-                              leading: Container(
-                                width: 10,
-                                height: 40,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: habitlist[index].color),
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => deleteHabit(habitlist[index]),
-                              ),
-                              onLongPress: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 5, sigmaY: 5),
-                                        child: Dialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0)),
-                                          backgroundColor: Colors.grey[900],
-                                          child: dialogContent(index),
+                      final currentDate = DateTime.now();
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Card(
+                                color: const Color.fromRGBO(40, 40, 40, 1),
+                                child: ListTile(
+                                    title: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              habitlist[index].name.toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Text(formatDate(
+                                                habitlist[index]
+                                                    .streakStartDate!,
+                                                [dd, '-', mm, '-', yyyy])),
+                                          ],
                                         ),
-                                      );
-                                    });
-                              }));
+                                        // Text("hey")
+                                      ],
+                                    ),
+                                    leading: Container(
+                                      width: 10,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                          color: habitlist[index].color),
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              if (!ishabitAlreadyRegistered(
+                                                  habitlist[index],
+                                                  currentDate)) {
+                                                animationController.forward();
+                                                markHabitProgress(habitlist,
+                                                    index, currentDate);
+                                              } else {
+                                                print(
+                                                    "Already registerered for the day");
+                                              }
+                                            },
+                                            icon: chooseIcon(
+                                                habitlist, index, currentDate)),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              color: Color.fromARGB(
+                                                  255, 225, 90, 78)),
+                                          onPressed: () =>
+                                              deleteHabit(habitlist[index]),
+                                        ),
+                                      ],
+                                    ),
+                                    onLongPress: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return BackdropFilter(
+                                              filter: ImageFilter.blur(
+                                                  sigmaX: 5, sigmaY: 5),
+                                              child: Dialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15.0)),
+                                                backgroundColor:
+                                                    Colors.grey[900],
+                                                child: dialogContent(index),
+                                              ),
+                                            );
+                                          });
+                                    })),
+                            // const SizedBox(height: 0),
+                            // Container(color: const Color.fromRGBO(40, 40, 40, 1),child: TextButton(onPressed: (){
+
+                            // }, child: Text("Mark as Completed"))),
+                            // const SizedBox(height: 10)
+                          ]);
                       // }));
                     }),
                   );
@@ -88,25 +245,42 @@ class _HabitListState extends State<HabitList> {
   }
 
   showHabitCreationDialog(BuildContext context) {
-    final controller = TextEditingController();
+    final habitNameController = TextEditingController();
+    final goalDaysController = TextEditingController();
 
     showDialog(
         context: context,
         builder: (context) {
           // return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              title: const Text(
-                "Add a Habit",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              elevation: 100,
-              content: StatefulBuilder(builder: (context,setState) { 
-                return Column(
+          return AlertDialog(
+            title: const Text(
+              "Add a Habit",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            elevation: 100,
+            content: StatefulBuilder(builder: (context, setState) {
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
-                    controller: controller,
+                    controller: habitNameController,
+                    decoration: const InputDecoration(
+                      // suffixIcon: Icon(Icons.lock),
+                      border: OutlineInputBorder(),
+                      labelText: 'Habit Name',
+                      // hintText: 'Enter Your Password',
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: goalDaysController,
+                    decoration: const InputDecoration(
+                      // suffixIcon: Icon(Icons.lock),
+                      border: OutlineInputBorder(),
+                      labelText: 'Goal',
+                      // hintText: 'Enter Your Password',
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -120,17 +294,13 @@ class _HabitListState extends State<HabitList> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: const Text("Pick your Habit color"),
-                                    content: Column(
-                                      children: [
-                                        ColorPicker(
-                                            pickerColor: color,
-                                            onColorChanged: (color) {
-                                              setState(() {
-                                                this.color = color;
-                                              });
-                                            })
-                                      ],
-                                    ),
+                                    content: ColorPicker(
+                                        pickerColor: color,
+                                        onColorChanged: (color) {
+                                          setState(() {
+                                            this.color = color;
+                                          });
+                                        }),
                                     actions: [
                                       TextButton(
                                           onPressed: () {
@@ -140,7 +310,7 @@ class _HabitListState extends State<HabitList> {
                                     ],
                                   );
                                 });
-                            },
+                          },
                           // },
                           child: const Text("Choose Color")),
                       Container(
@@ -153,18 +323,18 @@ class _HabitListState extends State<HabitList> {
                   )
                 ],
               );
-            }
-            ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      // callbackFunction(Habit(controller.text.trim()));
-                      addHabit(controller.text.trim(), color);
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Create Habit")),
-              ],
-            );
+            }),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    // callbackFunction(Habit(controller.text.trim()));
+                    addHabit(habitNameController.text.trim(), color,
+                        int.parse(goalDaysController.text.trim()));
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Create Habit")),
+            ],
+          );
           // }
           // );
         });

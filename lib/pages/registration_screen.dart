@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Registration extends StatefulWidget {
@@ -20,9 +21,17 @@ class _RegistrationState extends State<Registration> {
   // String confirmPassword = '';
 
   Future registerUser() async {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: userNameController.text.trim(),
-        password: passwordController.text.trim());
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: userNameController.text.trim(),
+          password: passwordController.text.trim());
+    } catch (signUpError) {
+      if (signUpError is PlatformException) {
+        if (signUpError.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+          print("Email already registered");
+        }
+      }
+    }
   }
 
   @override
@@ -105,12 +114,13 @@ class _RegistrationState extends State<Registration> {
                   if (passwordController.text.trim().length >= 6) {
                     await registerUser();
                     Navigator.of(context).pop();
-                  }else{
-                      Fluttertoast.showToast(
-                      msg: "Passwords should be more than 6 characters long!!",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER);
-                    }
+                  } else {
+                    Fluttertoast.showToast(
+                        msg:
+                            "Passwords should be more than 6 characters long!!",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER);
+                  }
                 } else {
                   Fluttertoast.showToast(
                     msg: "Passwords don't Match!!",
