@@ -17,7 +17,12 @@ class _StatsState extends State<Stats> {
     // List<Habit> habits = Boxes.getHabits().values.toList();
     return Scaffold(
       backgroundColor: const Color.fromRGBO(26,26,26,1),
-      body: SuccessRateChart(),
+      body: Column(
+        children: [
+          SuccessRateChart(),
+          // SuccessRateLegend();
+        ],
+      ),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:habit_tracker/getDayDifference.dart';
 
 class Metrics {
   static int getSuccessRate(Habit habit) {
+    print(habit.completedDays.length);
+    print(daysBetween(habit.habitStartDate!,DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day +1)).toString());
     return ((habit.completedDays.length /
                 (daysBetween(
                         habit.habitStartDate!,

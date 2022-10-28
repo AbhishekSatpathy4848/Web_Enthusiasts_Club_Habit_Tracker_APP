@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:activity_ring/activity_ring.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/Metrics.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:hive/hive.dart';
@@ -140,20 +141,33 @@ class _HabitListState extends State<HabitList>
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: const Color.fromRGBO(40, 40, 40, 1),
-            foregroundColor: Colors.blue,
-            onPressed: () {
-              // NotificationApi.showNotification(
-              //       title: "First Flutter Notification",
-              //       body: "We are building the IRIS Flutter Project");
-              showHabitCreationDialog(context);
-            },
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0)),
-            child: const Icon(Icons.add)),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: SizedBox(
+          width: 100,
+          child: FloatingActionButton(
+              backgroundColor: const Color.fromRGBO(40, 40, 40, 1),
+              foregroundColor: Colors.blue,
+              onPressed: () {
+                // NotificationApi.showNotification(
+                //       title: "First Flutter Notification",
+                //       body: "We are building the IRIS Flutter Project");
+                if(Boxes.getHabits().values.toList().length <8) {
+                  showHabitCreationDialog(context);
+                } else{
+                  Fluttertoast.showToast(
+                    msg: "Only 8 habits can be created per user!!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+
+                  );
+                }
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              child: const Icon(Icons.add)),
+        ),
         body: Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 28.0, 20.0, 0.0),
             child: ValueListenableBuilder(
                 valueListenable: Boxes.getHabits().listenable(),
                 builder: ((context, box, widget) {
