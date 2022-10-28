@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:habit_tracker/getDayDifference.dart';
 part 'Habit.g.dart';
 
 @HiveType(typeId: 0)
@@ -32,5 +33,47 @@ class Habit extends HiveObject {
 
   addToCompletedDays(DateTime dateTime) {
     completedDays.add(dateTime);
+  }
+
+  int getSuccessRate() {
+    // print(habit.completedDays.length);
+    // print(daysBetween(habit.habitStartDate!,DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day +1)).toString());
+    return ((completedDays.length /
+                (daysBetween(
+                        habitStartDate!,
+                        DateTime(DateTime.now().year, DateTime.now().month,
+                            DateTime.now().day)) +
+                    1)) *
+            100)
+        .round();
+  }
+
+  int getProgressRate() {
+    // if(habit.completedDays.length == 1){
+    //     return ((1 / habit.goalDays) * 100).round();
+    // }
+
+    print(DateTime(
+        DateTime.now().year, DateTime.now().month, DateTime.now().day));
+    if (completedDays.contains(DateTime(
+        DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
+      print("here");
+      return (((daysBetween(
+                          habitStartDate!,
+                          DateTime(DateTime.now().year, DateTime.now().month,
+                              DateTime.now().day)) +
+                      1) /
+                  goalDays) *
+              100)
+          .round();
+    }
+    print("here1");
+    return (((daysBetween(
+                    habitStartDate!,
+                    DateTime(DateTime.now().year, DateTime.now().month,
+                        DateTime.now().day))) /
+                goalDays) *
+            100)
+        .round();
   }
 }

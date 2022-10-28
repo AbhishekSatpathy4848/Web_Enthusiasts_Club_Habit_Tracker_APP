@@ -8,20 +8,20 @@ import 'package:activity_ring/activity_ring.dart';
 import 'dart:ui';
 
 
-class SuccessRateChart extends StatelessWidget {
-  SuccessRateChart({super.key});
+class ProgressRateChart extends StatelessWidget {
+  ProgressRateChart({super.key});
   
   final amber = Color.fromRGBO(255, 192, 29, 1);
 
   // final metricType == ""
 
   Widget container(Habit habit, double totalBarWidth) {
-    // print(Metrics.getSuccessRate(habit) / 100);
+    // print(Metrics.getProgressRate(habit) / 100);
     // print(totalBarWidth);
-    // print((Metrics.getSuccessRate(habit) / 100) * totalBarWidth);
+    // print((Metrics.getProgressRate(habit) / 100) * totalBarWidth);
     double width;
-    if (habit.getSuccessRate() != 0) {
-      width = habit.getSuccessRate() / 100 * totalBarWidth;
+    if (habit.getProgressRate() != 0) {
+      width = habit.getProgressRate() / 100 * totalBarWidth;
       // width = totalBarWidth;
     } else {
       width = 5;
@@ -48,7 +48,7 @@ class SuccessRateChart extends StatelessWidget {
           width: 10,
         ),
         Text(
-          "${habitlist[i].getSuccessRate()} %",
+          "${habitlist[i].getProgressRate()} %",
           style: TextStyle(color: amber, fontWeight: FontWeight.bold),
         )
       ]));
@@ -79,13 +79,11 @@ class SuccessRateChart extends StatelessWidget {
                   child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: (barCharts(habitList, context).isNotEmpty) ? barCharts(habitList, context): const [Center(child: Text("No Habits Created",style: TextStyle(color: Colors.white)))]) ),
-                )
-              );
-            }
-          )
-        );
-      }
+                      children: (barCharts(habitList, context).isNotEmpty) ? barCharts(habitList, context): const [Center(child: Text("No Habits Created",style: TextStyle(color: Colors.white)))]),
+                ),
+              ));
+        }));
+  }
 
   Ring ringChart(List<Habit> habitlist, BuildContext context, int i,
       double radius, double width) {
@@ -98,7 +96,7 @@ class SuccessRateChart extends StatelessWidget {
     }
 
     return Ring(
-      percent: habitlist[i].getSuccessRate().toDouble(),
+      percent: habitlist[i].getProgressRate().toDouble(),
       color: RingColorScheme(ringColor: habitlist[i].color),
       radius: radius,
       width: width,
@@ -118,7 +116,7 @@ class SuccessRateChart extends StatelessWidget {
             height: 20),
         const SizedBox(width: 10),
         Text(
-          "${habit.getSuccessRate().toDouble()}%",
+          "${habit.getProgressRate().toDouble()}%",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         )
       ],
@@ -140,7 +138,7 @@ class SuccessRateChart extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Success Rate",
+                Text("Progress Rate",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
@@ -182,23 +180,6 @@ class SuccessRateChart extends StatelessWidget {
                     })),
               ),
             )
-            // ),
-
-            //     Container(
-            //         child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: buildCharts(habitList, context),
-            //     )),
-            //     const SizedBox(height: 40),
-            //     Text("Progress Rate",
-            //         style: TextStyle(
-            //             fontWeight: FontWeight.bold, fontSize: 22, color: amber)),
-            //     // SizedBox(width: 40),
-            //     Container(
-            //         child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: buildCharts(habitList, context),
-            //     )),
           ],
         ));
   }

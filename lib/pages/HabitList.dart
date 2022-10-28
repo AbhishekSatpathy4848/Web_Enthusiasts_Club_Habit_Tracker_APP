@@ -418,7 +418,7 @@ class _HabitListState extends State<HabitList>
                       children: [
                         const SizedBox(height: 40),
                         Ring(
-                          percent: Metrics.getProgressRate(habit).toDouble(),
+                          percent: habit.getProgressRate().toDouble(),
                           color: RingColorScheme(
                               ringColor:
                                   const Color.fromARGB(255, 237, 183, 5)),
@@ -426,7 +426,7 @@ class _HabitListState extends State<HabitList>
                           radius: 50,
                           child: Center(
                               child: Text(
-                                  "${Metrics.getProgressRate(habit).toString()}%",
+                                  "${habit.getProgressRate().toString()}%",
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 16))),
                         ),
@@ -443,7 +443,7 @@ class _HabitListState extends State<HabitList>
                       children: [
                         const SizedBox(height: 40),
                         Ring(
-                          percent: Metrics.getSuccessRate(habit).toDouble(),
+                          percent: habit.getSuccessRate().toDouble(),
                           color: RingColorScheme(
                               ringColor:
                                   const Color.fromARGB(255, 15, 232, 127)),
@@ -451,7 +451,7 @@ class _HabitListState extends State<HabitList>
                           radius: 50,
                           child: Center(
                               child: Text(
-                                  "${Metrics.getSuccessRate(habit).toString()}%",
+                                  "${habit.getSuccessRate().toString()}%",
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 16))),
                         ),
