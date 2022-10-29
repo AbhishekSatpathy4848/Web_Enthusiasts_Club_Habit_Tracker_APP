@@ -1,12 +1,16 @@
 // import 'dart:js';
 
+// import 'dart:html';
 import 'dart:ui';
 import 'package:activity_ring/activity_ring.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/Metrics.dart';
+import 'package:habit_tracker/UpdateStreakMetric.dart';
 import 'package:habit_tracker/model/Habit.dart';
+import 'package:habit_tracker/pages/HabitDetailsPage.dart';
 import 'package:hive/hive.dart';
 import 'package:habit_tracker/boxes.dart';
 import 'package:habit_tracker/localNotificationService.dart';
@@ -18,26 +22,63 @@ import 'package:habit_tracker/getDayDifference.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math';
 import 'package:checkmark/checkmark.dart';
+import 'package:flutter/services.dart';
 
 class HabitList extends StatefulWidget {
-  HabitList({super.key});
+  const HabitList({super.key});
 
   @override
   State<HabitList> createState() => _HabitListState();
 }
 
 class _HabitListState extends State<HabitList>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   // List<Habit> listHabits = [Habit("habit1"), Habit("habit2")];
 
   // final VoidCallback addHabit;
   late Color color;
   late AnimationController animationController;
+  late DateTime currentTime = DateTime(0, 0, 0);
   // bool isTicked = false;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('state = $state');
+    // if (state == AppLifecycleState.resumed) {
+    //   build(context);
+    // }
+  }
+
+  handleAppLifecycleState() {
+    AppLifecycleState _lastLifecyleState;
+    SystemChannels.lifecycle.setMessageHandler((msg) async {
+      // print('SystemChannels> $msg');
+      if (msg == "AppLifecycleState.resumed") {
+        setState(() {
+          currentTime = DateTime.now();
+        });
+      }
+      switch (msg) {
+        case "AppLifecycleState.paused":
+          _lastLifecyleState = AppLifecycleState.paused;
+          break;
+        case "AppLifecycleState.inactive":
+          _lastLifecyleState = AppLifecycleState.inactive;
+          break;
+        case "AppLifecycleState.resumed":
+          _lastLifecyleState = AppLifecycleState.resumed;
+          break;
+        default:
+      }
+      return null;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    // print("hey");
+    handleAppLifecycleState();
     setColorChoice();
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
@@ -67,78 +108,69 @@ class _HabitListState extends State<HabitList>
     habit.delete();
   }
 
-  void editHabitStreaks(Habit habit, int streaks) {
-    habit.streaks = streaks;
-    print(habit.streaks);
-    habit.save();
-  }
+  // void editHabitStreaks(Habit habit, int streaks) {
+  //   habit.streaks = streaks;
+  //   print(habit.streaks);
+  //   habit.save();
+  // }
 
-  void editHabitStreakBeginDate(Habit habit, DateTime currentDate) {
-    habit.streakStartDate = currentDate;
-    // print(habit.streaks);
-    habit.save();
-  }
+  // void editHabitStreakBeginDate(Habit habit, DateTime currentDate) {
+  //   habit.streakStartDate = currentDate;
+  //   // print(habit.streaks);
+  //   habit.save();
+  // }
 
-  void updateMaxStreak(Habit habit, int maxStreaks) {
-    habit.maxStreaks = maxStreaks;
-    // print(habit.streaks);
-    habit.save();
-  }
+  // void updateMaxStreak(Habit habit, int maxStreaks) {
+  //   habit.maxStreaks = maxStreaks;
+  //   // print(habit.streaks);
+  //   habit.save();
+  // }
 
-  bool ishabitAlreadyRegistered(Habit habit, DateTime currentDate) {
-    // return daysBetween(habit.streakStartDate!, currentDate) > habit.streaks;
-    return habit.completedDays.contains(currentDate);
-  }
+  // bool ishabitAlreadyRegisteredForTheDay(Habit habit, DateTime currentDate) {
+  //   // return daysBetween(habit.streakStartDate!, currentDate) > habit.streaks;
+  //   return habit.completedDays.contains(currentDate);
+  // }
 
-  void addCompletedDate(Habit habit, DateTime currentDate) {
-    habit.completedDays.add(currentDate);
-    habit.save();
-  }
+  // void addCompletedDate(Habit habit, DateTime currentDate) {
+  //   habit.completedDays.add(currentDate);
+  //   habit.save();
+  // }
 
-  void showCompletedAnimationDialog() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Dialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                backgroundColor: Colors.grey[900],
-                child: Lottie.network(
-                    "https://assets5.lottiefiles.com/packages/lf20_q7hiluze.json"),
-              ));
-        });
-  }
+  // void showCompletedAnimationDialog() {
+  //   showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return BackdropFilter(
+  //             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+  //             child: Dialog(
+  //               shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(15.0)),
+  //               backgroundColor: Colors.grey[900],
+  //               child: Lottie.network(
+  //                   "https://assets5.lottiefiles.com/packages/lf20_q7hiluze.json"),
+  //             ));
+  //       });
+  // }
 
   void markHabitProgress(
       List<Habit> habitlist, int index, DateTime currentDate) {
-    if (daysBetween(habitlist[index].streakStartDate!, currentDate) ==
-        habitlist[index].streaks) {
-      editHabitStreaks(habitlist[index], habitlist[index].streaks + 1);
-      addCompletedDate(habitlist[index], currentDate);
-      if (habitlist[index].maxStreaks < habitlist[index].streaks) {
-        updateMaxStreak(habitlist[index], habitlist[index].streaks);
-      }
-    } else if (daysBetween(habitlist[index].streakStartDate!, currentDate) >
-        habitlist[index].streaks) {
-      editHabitStreakBeginDate(habitlist[index], currentDate);
-      // showCompletedAnimationDialog();
-      editHabitStreaks(habitlist[index], 1);
-    }
+    habitlist[index].registerDay(currentDate);
+    updateStreakMetrics(habitlist[index], currentDate);
+    habitlist[index].save();
   }
 
-  Widget chooseIcon(habitlist, index, currentDate) {
-    if (ishabitAlreadyRegistered(habitlist[index], currentDate)) {
-      return const Icon(Icons.check, color: Color.fromARGB(255, 62, 236, 67));
-    } else {
-      return AnimatedIcon(
-          icon: AnimatedIcons.arrow_menu, progress: animationController);
-    }
-  }
+  // Widget chooseIcon(habitlist, index, currentDate) {
+  //   if (ishabitAlreadyRegisteredForTheDay(habitlist[index], currentDate)) {
+  //     return const Icon(Icons.check, color: Color.fromARGB(255, 62, 236, 67));
+  //   } else {
+  //     return AnimatedIcon(
+  //         icon: AnimatedIcons.arrow_menu, progress: animationController);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    // print("Running Build");
     return Scaffold(
         backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -151,14 +183,13 @@ class _HabitListState extends State<HabitList>
                 // NotificationApi.showNotification(
                 //       title: "First Flutter Notification",
                 //       body: "We are building the IRIS Flutter Project");
-                if(Boxes.getHabits().values.toList().length <8) {
+                if (Boxes.getHabits().values.toList().length < 8) {
                   showHabitCreationDialog(context);
-                } else{
+                } else {
                   Fluttertoast.showToast(
                     msg: "Only 8 habits can be created per user!!",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
-
                   );
                 }
               },
@@ -171,6 +202,7 @@ class _HabitListState extends State<HabitList>
             child: ValueListenableBuilder(
                 valueListenable: Boxes.getHabits().listenable(),
                 builder: ((context, box, widget) {
+                  print("Running value listenable builder");
                   List<Habit> habitlist = box.values.toList();
                   return ListView.builder(
                     itemCount: Boxes.getHabits().keys.length,
@@ -196,10 +228,15 @@ class _HabitListState extends State<HabitList>
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
-                                            // Text(formatDate(
-                                            //     habitlist[index]
-                                            //         .streakStartDate!,
-                                            //     [dd, '-', mm, '-', yyyy])),
+
+                                            //used to rebuild widgets when Day changes
+                                            SizedBox(
+                                              width: 0,
+                                              height: 0,
+                                              child: Text(formatDate(
+                                                  currentTime,
+                                                  [dd, '-', mm, '-', yyyy])),
+                                            ),
                                           ],
                                         ),
                                         // Text("hey")
@@ -233,34 +270,42 @@ class _HabitListState extends State<HabitList>
                                         //     //     habitlist, index, currentDate)),
                                         //     icon: ),
                                         GestureDetector(
-                                              onTap: () {
-                                                // setState(() {
-                                                  // isTicked = !isTicked;
-                                                  // print(isTicked);
-                                                  if (!ishabitAlreadyRegistered(habitlist[index],currentDate)) {
-                                                    markHabitProgress(habitlist,index, currentDate);
-                                                  } else {
-                                                  print("Already registerered for the day");
-                                                }
-                                              // });
-                                              },
-                                              child: SizedBox(
-                                                height: 30,
-                                                width: 30,
-                                                child: CheckMark(
-                                                  active: ishabitAlreadyRegistered(habitlist[index],currentDate),
-                                                  curve: Curves.decelerate,
-                                                  strokeWidth: 3,
-                                                  activeColor:
-                                                      const Color.fromARGB(
-                                                          255, 62, 236, 67),
-                                                  // strokeJoin: StrokeJoin.miter,
-                                                  duration: const Duration(
-                                                      milliseconds: 500),
-                                                ),
-                                              ),
+                                          onTap: () {
+                                            // setState(() {
+                                            // isTicked = !isTicked;
+                                            // print(isTicked);
+                                            print("Tap detected");
+                                            if (!habitlist[index]
+                                                .ishabitAlreadyRegisteredForTheDay(
+                                                    currentDate)) {
+                                              markHabitProgress(habitlist,
+                                                  index, currentDate);
+                                            } else {
+                                              print(habitlist[index]
+                                                  .completedDays);
+                                              print(
+                                                  "Already registerered for the day");
+                                            }
+                                            // });
+                                          },
+                                          child: SizedBox(
+                                            height: 30,
+                                            width: 30,
+                                            child: CheckMark(
+                                              active: habitlist[index]
+                                                  .ishabitAlreadyRegisteredForTheDay(
+                                                      currentDate),
+                                              curve: Curves.decelerate,
+                                              strokeWidth: 3,
+                                              activeColor: const Color.fromARGB(
+                                                  255, 62, 236, 67),
+                                              // strokeJoin: StrokeJoin.miter,
+                                              duration: const Duration(
+                                                  milliseconds: 500),
                                             ),
-                                          const SizedBox(width: 10),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
                                         IconButton(
                                           icon: const Icon(Icons.delete,
                                               color: Color.fromARGB(
@@ -270,6 +315,15 @@ class _HabitListState extends State<HabitList>
                                         ),
                                       ],
                                     ),
+                                    onTap: (() {
+                                      Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: ((context) =>
+                                                  HabitDetailsPage(
+                                                      habitlist[index]))));
+                                      // Navigator.push(context, )
+                                    }),
                                     onLongPress: () {
                                       showDialog(
                                           context: context,
@@ -333,6 +387,7 @@ class _HabitListState extends State<HabitList>
                   const SizedBox(height: 10),
                   TextField(
                     controller: goalDaysController,
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       // suffixIcon: Icon(Icons.lock),
                       border: OutlineInputBorder(),

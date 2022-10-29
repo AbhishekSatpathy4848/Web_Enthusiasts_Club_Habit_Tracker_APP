@@ -52,6 +52,7 @@ dependencies:
   lottie: ^1.4.3
   animated_icon: ^0.0.4
   checkmark: ^0.0.2+1
+  clean_calendar: ^0.6.2
 
 dev_dependencies: 
   flutter_test:

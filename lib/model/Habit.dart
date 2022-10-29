@@ -6,13 +6,13 @@ part 'Habit.g.dart';
 @HiveType(typeId: 0)
 class Habit extends HiveObject {
   @HiveField(0)
-  String? name;
+  String name;
   @HiveField(1)
-  Color? color;
+  Color color;
   @HiveField(2)
-  DateTime? streakStartDate;
+  DateTime streakStartDate;
   @HiveField(3)
-  DateTime? habitStartDate;
+  DateTime habitStartDate;
   // Duration? end;
   @HiveField(4)
   int streaks;
@@ -40,7 +40,7 @@ class Habit extends HiveObject {
     // print(daysBetween(habit.habitStartDate!,DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day +1)).toString());
     return ((completedDays.length /
                 (daysBetween(
-                        habitStartDate!,
+                        habitStartDate,
                         DateTime(DateTime.now().year, DateTime.now().month,
                             DateTime.now().day)) +
                     1)) *
@@ -59,7 +59,7 @@ class Habit extends HiveObject {
         DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
       print("here");
       return (((daysBetween(
-                          habitStartDate!,
+                          habitStartDate,
                           DateTime(DateTime.now().year, DateTime.now().month,
                               DateTime.now().day)) +
                       1) /
@@ -69,11 +69,40 @@ class Habit extends HiveObject {
     }
     print("here1");
     return (((daysBetween(
-                    habitStartDate!,
+                    habitStartDate,
                     DateTime(DateTime.now().year, DateTime.now().month,
                         DateTime.now().day))) /
                 goalDays) *
             100)
         .round();
   }
+
+  void editHabitStreaks(int streaks) {
+    this.streaks = streaks;
+    // print(habit.streaks);
+    // habit.save();
+  }
+
+  void registerDay(DateTime currentDate) {
+    completedDays.add(currentDate);
+    // habit.save();
+  }
+
+  bool ishabitAlreadyRegisteredForTheDay(DateTime currentDate) {
+    // return daysBetween(habit.streakStartDate!, currentDate) > habit.streaks;
+    return completedDays.contains(currentDate);
+  }
+
+  void updateMaxStreak(int maxStreaks) {
+    this.maxStreaks = maxStreaks;
+    // print(habit.streaks);
+    // habit.save();
+  }
+
+  void editHabitStreakBeginDate(DateTime currentDate) {
+    streakStartDate = currentDate;
+    // print(habit.streaks);
+    // habit.save();
+  }
+
 }

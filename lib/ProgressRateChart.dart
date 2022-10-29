@@ -169,6 +169,7 @@ class ProgressRateChart extends StatelessWidget {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
+                      
                       // childAspectRatio: 1.0,
                       mainAxisSpacing: 10.0,
                       mainAxisExtent: 20,

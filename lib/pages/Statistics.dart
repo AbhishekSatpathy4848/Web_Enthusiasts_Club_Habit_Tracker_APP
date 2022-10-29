@@ -19,18 +19,16 @@ class _StatsState extends State<Stats> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(26,26,26,1),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20,20,20,0.0),
-              child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: ProgressRateChart()),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20,20,20,20.0),
-              child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: SuccessRateChart()),
-            ),
-            // SuccessRateLegend();
-          ],
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20,20,20,20.0),
+          child: Column(
+            children: [
+              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: ProgressRateChart()),
+              const SizedBox(height: 15),
+              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: SuccessRateChart()),
+              // SuccessRateLegend();
+            ],
+          ),
         ),
       ),
     );
