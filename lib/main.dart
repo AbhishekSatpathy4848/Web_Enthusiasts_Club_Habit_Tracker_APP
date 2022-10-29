@@ -19,16 +19,18 @@ void main() async {
   Hive.registerAdapter(HabitAdapter());
   await Hive.openBox<Habit>('habits');
 
-  runApp(MaterialApp(home: LoginCheck(), routes: {
-    '/login': (context) => Login(),
-    '/register': (context) => Registration(),
-    '/home': (context) => Home(),
-
-
-
-  }),);
+  runApp(
+    MaterialApp(home: Home(), routes: {
+      '/login': (context) => Login(),
+      '/register': (context) => Registration(),
+      '/home': (context) => Home(),
+    },
+    darkTheme: ThemeData(
+        brightness: Brightness.dark,
+      ),
+        themeMode: ThemeMode.dark,),
+  );
 }
-
 
 class LoginCheck extends StatelessWidget {
   const LoginCheck({super.key});

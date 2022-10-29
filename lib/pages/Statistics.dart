@@ -26,6 +26,8 @@ class _StatsState extends State<Stats> {
               Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: ProgressRateChart()),
               const SizedBox(height: 15),
               Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: SuccessRateChart()),
+              const SizedBox(height: 15),
+              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: SuccessRateChart())
               // SuccessRateLegend();
             ],
           ),

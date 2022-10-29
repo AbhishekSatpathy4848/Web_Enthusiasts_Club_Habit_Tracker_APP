@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.grey[900],
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
-        title: const Text("Habit Tracker"),
+        title: Text("Habit Tracker",style: TextStyle(color: Colors.amberAccent[200]),),
         centerTitle: true,
         // actions: [
         //   IconButton(

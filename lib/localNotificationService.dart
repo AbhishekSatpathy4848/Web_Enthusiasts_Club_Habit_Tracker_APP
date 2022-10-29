@@ -8,15 +8,15 @@ class NotificationApi {
   static final _notifications = FlutterLocalNotificationsPlugin();
 
   static Future _notificationDetails() async {
-    // print('uwevfwjfvewjefvwja');
-    return NotificationDetails(
-        android: AndroidNotificationDetails(
-      'channel id',
-      'channel name',
-      channelDescription: 'channel description',
-      importance: Importance.max,
-      // enableVibration: tru e
-    ));
+    print('uwevfwjfvewjefvwja');
+    // return NotificationDetails(
+    //     android: AndroidNotificationDetails(
+    //   'channel id',
+    //   'channel name',
+    //   channelDescription: 'channel description',
+    //   importance: Importance.max,
+    //   enableVibration: true
+    // ));
   }
 
   static Future showNotification(
