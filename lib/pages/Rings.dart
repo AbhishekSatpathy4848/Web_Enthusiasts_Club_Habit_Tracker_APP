@@ -10,7 +10,7 @@ class Rings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 280,
+        height: 260,
         child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: Column(
@@ -37,13 +37,13 @@ class Rings extends StatelessWidget {
                               child: Text(
                                   "${habit.getProgressRate().toString()}%",
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 16))),
+                                      color: Colors.white, fontSize: 16,fontWeight: FontWeight.w500))),
                         ),
                         // ),
                         const SizedBox(height: 70),
                         const Text(
                           "Progress Rate",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: TextStyle(color: Colors.white, fontSize: 16,fontWeight: FontWeight.w900),
                         )
                       ]),
                   const SizedBox(width: 50),
@@ -62,13 +62,13 @@ class Rings extends StatelessWidget {
                               child: Text(
                                   "${habit.getSuccessRate().toString()}%",
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 16))),
+                                      color: Colors.white, fontSize: 16,fontWeight: FontWeight.w500))),
                         ),
                         // ),
                         const SizedBox(height: 70),
                         const Text(
                           "Success Rate",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: TextStyle(color: Colors.white, fontSize: 16,fontWeight: FontWeight.w900),
                         )
                       ]),
                 ]),

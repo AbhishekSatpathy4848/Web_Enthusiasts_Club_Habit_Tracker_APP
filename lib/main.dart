@@ -20,7 +20,7 @@ void main() async {
   await Hive.openBox<Habit>('habits');
 
   runApp(
-    MaterialApp(home: Home(), routes: {
+    MaterialApp(home: Login(), routes: {
       '/login': (context) => Login(),
       '/register': (context) => Registration(),
       '/home': (context) => Home(),

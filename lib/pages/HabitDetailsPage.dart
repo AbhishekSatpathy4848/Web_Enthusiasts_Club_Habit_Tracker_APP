@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:habit_tracker/BestStreakWidget.dart';
+import 'package:habit_tracker/CurrentStreakWidget.dart';
 import 'package:habit_tracker/boxes.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/pages/HabitList.dart';
@@ -9,6 +11,7 @@ import 'dart:ui';
 import 'package:clean_calendar/clean_calendar.dart';
 import 'package:habit_tracker/UpdateStreakMetric.dart';
 import 'package:habit_tracker/pages/Rings.dart';
+import 'package:habit_tracker/Calendar.dart';
 
 class HabitDetailsPage extends StatelessWidget {
   // suprHabitDetailsPage({super.key});
@@ -38,70 +41,60 @@ class HabitDetailsPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20.0),
+          padding: const EdgeInsets.all(15),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.0),
                       color: Colors.grey[900]),
                   child: Rings(habit)),
-                const SizedBox(height: 15),
+              const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
                     color: Colors.grey[900]),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CleanCalendar(
-                        datesForStreaks: habit.completedDays,
-                        currentDateProperties: DatesProperties(
-                          datesDecoration: DatesDecoration(
-                            datesBorderRadius: 1000,
-                            // datesBackgroundColor: Colors.lightGreen.shade100,
-                            datesBorderColor: Colors.blue,
-                            // datesTextColor: Colors.black,
-                          ),
-                        ),
-                        generalDatesProperties: DatesProperties(
-                          datesDecoration: DatesDecoration(
-                            datesBorderRadius: 1000,
-                            datesBorderColor: Colors.amberAccent[200],
-                            // datesTextColor: Colors.white,
-                          ),
-                        ),
-                        streakDatesProperties: DatesProperties(
-                          datesDecoration: DatesDecoration(
-                            datesBorderRadius: 1000,
-                            datesBackgroundColor:
-                                const Color.fromRGBO(26, 26, 26, 1),
-                            datesBorderColor:
-                                const Color.fromARGB(255, 54, 234, 60),
-                            // datesTextColor: Colors.white,
-                          ),
-                        ),
-                        leadingTrailingDatesProperties: DatesProperties(
-                          datesDecoration: DatesDecoration(
-                            datesBorderRadius: 1000,
-                          ),
-                        ),
-                      ),
-                      Container(
-                          child: Text(
-                              "Current Streak" + habit.streaks.toString())),
-                      Container(
-                          child:
-                              Text("Max Streak" + habit.maxStreaks.toString())),
-                      Container(
-                          child: Text("Streak Start Day" +
-                              habit.streakStartDate.toString()))
+                      calendar(habit),
+                      // Container(
+                      //     child: Text(
+                      //         "Current Streak" + habit.streaks.toString())),
+                      // Container(
+                      //     child:
+                      //         Text("Max Streak" + habit.maxStreaks.toString())),
+                      // Container(
+                      //     child: Text("Streak Start Day" +
+                      //         habit.streakStartDate.toString())),
                     ],
                   ),
                 ),
               ),
+              const SizedBox(height: 10,),
+               Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.0),
+                              color: Colors.grey[900]),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 10),
+                            child: CurrentStreakWidget(habit),
+                          )),
+              const SizedBox(height: 10,),
+               Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.0),
+                              color: Colors.grey[900]),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 10),
+                            child: BestStreakWidget(habit),
+                          ))
             ],
           ),
         ),

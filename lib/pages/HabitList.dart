@@ -229,7 +229,7 @@ class _HabitListState extends State<HabitList>
                                                   color: Colors.white),
                                             ),
 
-                                            //used to rebuild widgets when Day changes
+                                            //used to rebuild widgets when Day changes, not actually displayed
                                             SizedBox(
                                               width: 0,
                                               height: 0,
