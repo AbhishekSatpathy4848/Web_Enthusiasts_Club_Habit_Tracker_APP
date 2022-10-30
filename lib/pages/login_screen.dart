@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -17,36 +18,38 @@ class _LoginState extends State<Login> {
 
   Future signIn() async {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: userNameController.text.trim(),
+        email: emailController.text.trim(),
         password: passwordController.text.trim());
   }
 
   final _formKey = GlobalKey<FormState>();
-  final userNameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  String userName = '';
+  String email = '';
   String password = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+      resizeToAvoidBottomInset: false,
+      // backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
+      body: Container(
+        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('images/BackgroundStars.jpeg') as ImageProvider,fit: BoxFit.cover)),
+
+        child: Form(
+          key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text("Welcome Back",style: TextStyle(color:  Color.fromARGB(255, 237, 183, 5),fontWeight: FontWeight.bold,fontSize: 38,letterSpacing: 1.2),),
-                const SizedBox(height: 40),
-                Text("Let's Build some tiny habits!",style: TextStyle(color:  Colors.blue,fontWeight: FontWeight.bold,fontSize: 30,letterSpacing: 1.2),textAlign: TextAlign.center,),
-
+                Text("Welcome Back!!",style: TextStyle(color:  Color.fromARGB(255, 237, 183, 5),fontWeight: FontWeight.bold,fontSize: 38,letterSpacing: 1.2),textAlign: TextAlign.center,),
                 const SizedBox(height: 20),
+                Text("Let's Build some tiny habits!",style: TextStyle(color:  Colors.blue,fontWeight: FontWeight.bold,fontSize: 30,letterSpacing: 1.2),textAlign: TextAlign.center,),
+      
+                const SizedBox(height: 30),
                 TextFormField(
                   validator: (value) {
                     if (value!.isNotEmpty) {
@@ -57,15 +60,15 @@ class _LoginState extends State<Login> {
                       return null;
                     }
                   },
-                  controller: userNameController,
+                  controller: emailController,
                   style: const TextStyle(
                       // color: Colors.grey[600]
                       ),
                   decoration: const InputDecoration(
                       suffixIcon: Icon(Icons.email),
                       border: OutlineInputBorder(),
-                      labelText: 'User Name',
-                      hintText: 'Enter Your Name',
+                      labelText: 'Email',
+                      hintText: 'Enter Your Email',
                       labelStyle: TextStyle(
                           // fontWeight: FontWeight.bold,
                           // color: Colors.amberAccent[200],
@@ -94,7 +97,7 @@ class _LoginState extends State<Login> {
                 RawMaterialButton(
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                   onPressed: () {
-                      // userName = userNameController.text.trim();
+                      // email = emailController.text.trim();
                       // password = passwordController.text.trim();
                       signIn();
                   },

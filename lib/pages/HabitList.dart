@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/Metrics.dart';
 import 'package:habit_tracker/UpdateStreakMetric.dart';
+import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/pages/HabitDetailsPage.dart';
 import 'package:hive/hive.dart';
@@ -406,6 +407,7 @@ class _HabitListState extends State<HabitList>
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
+                                    insetPadding: EdgeInsets.all(30.0),
                                     title: const Text("Pick your Habit color"),
                                     content: ColorPicker(
                                         pickerColor: color,
