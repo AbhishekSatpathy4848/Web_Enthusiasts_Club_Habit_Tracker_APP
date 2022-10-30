@@ -24,9 +24,6 @@ class Habit extends HiveObject {
   List<DateTime> completedDays;
   @HiveField(8)
   DateTime bestStreakStartDate;
-  @HiveField(9)
-  bool isCompleted;
-
 
   // double? successRate;
   // double? progressRate;
@@ -34,7 +31,7 @@ class Habit extends HiveObject {
   // Habit(String name, Duration start, Duration end, int streaks,
   // double successRate, double progressRate) {
   Habit(this.name, this.color, this.streakStartDate,this.habitStartDate, this.streaks, this.maxStreaks,
-      this.goalDays, this.completedDays,this.bestStreakStartDate,this.isCompleted);
+      this.goalDays, this.completedDays,this.bestStreakStartDate);
 
   addToCompletedDays(DateTime dateTime) {
     completedDays.add(dateTime);

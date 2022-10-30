@@ -23,7 +23,7 @@ class BestStreakWidget extends StatelessWidget {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0),color: const Color.fromRGBO(62, 62, 62, 1)),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("FROM "+DateFormat.yMMMd('en_US').format(habit.habitStartDate),style: TextStyle(fontSize: 11,fontWeight: FontWeight.w500),),
+            child: Text("FROM ${DateFormat.yMMMd('en_US').format(habit.bestStreakStartDate)}",style: const TextStyle(fontSize: 11,fontWeight: FontWeight.w500),),
           ),
         ),
         const SizedBox(width: 8,)

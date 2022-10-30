@@ -102,8 +102,7 @@ class _HabitListState extends State<HabitList>
         0,
         goalDays,
         [],
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-        false);
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
     // habit.addToCompletedDays(dateTime)
     final box = Boxes.getHabits();
     box.add(habit);
@@ -112,6 +111,7 @@ class _HabitListState extends State<HabitList>
 
   deleteHabit(Habit habit) {
     habit.delete();
+    addToCompletedHabits(habit);
   }
 
   addToCompletedHabits(Habit habit) {
@@ -282,8 +282,7 @@ class _HabitListState extends State<HabitList>
                                         SizedBox(
                                           width: 0,
                                           height: 0,
-                                          child: Text(formatDate(
-                                              currentTime,
+                                          child: Text(formatDate(currentTime,
                                               [dd, '-', mm, '-', yyyy])),
                                         ),
                                       ],
