@@ -42,13 +42,13 @@ class _HabitListState extends State<HabitList>
   late DateTime currentTime = DateTime(0, 0, 0);
   // bool isTicked = false;
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
-    // if (state == AppLifecycleState.resumed) {
-    //   build(context);
-    // }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   print('state = $state');
+  //   // if (state == AppLifecycleState.resumed) {
+  //   //   build(context);
+  //   // }
+  // }
 
   handleAppLifecycleState() {
     AppLifecycleState _lastLifecyleState;
@@ -57,6 +57,7 @@ class _HabitListState extends State<HabitList>
       if (msg == "AppLifecycleState.resumed") {
         setState(() {
           currentTime = DateTime.now();
+          checkHabitCompletedAndCallDialog();
         });
       }
       switch (msg) {
@@ -78,11 +79,12 @@ class _HabitListState extends State<HabitList>
   @override
   void initState() {
     super.initState();
-    // print("hey");
+    print("hey");
     handleAppLifecycleState();
     setColorChoice();
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    // print(checkHabitCompleted());
   }
 
   setColorChoice() {
@@ -98,7 +100,10 @@ class _HabitListState extends State<HabitList>
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
         0,
         0,
-        goalDays, []);
+        goalDays,
+        [],
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        false);
     // habit.addToCompletedDays(dateTime)
     final box = Boxes.getHabits();
     box.add(habit);
@@ -107,6 +112,11 @@ class _HabitListState extends State<HabitList>
 
   deleteHabit(Habit habit) {
     habit.delete();
+  }
+
+  addToCompletedHabits(Habit habit) {
+    final box = Boxes.getCompletedHabits();
+    box.add(habit);
   }
 
   // void editHabitStreaks(Habit habit, int streaks) {
@@ -137,21 +147,45 @@ class _HabitListState extends State<HabitList>
   //   habit.save();
   // }
 
-  // void showCompletedAnimationDialog() {
-  //   showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return BackdropFilter(
-  //             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-  //             child: Dialog(
-  //               shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(15.0)),
-  //               backgroundColor: Colors.grey[900],
-  //               child: Lottie.network(
-  //                   "https://assets5.lottiefiles.com/packages/lf20_q7hiluze.json"),
-  //             ));
-  //       });
-  // }
+  void habitCompletedDialog(Habit habit) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
+                backgroundColor: Colors.grey[900],
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(40.0, 25.0, 40.0, 40.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Lottie.network(
+                          "https://assets6.lottiefiles.com/packages/lf20_i4zw2ddg.json"),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Congratulations!!",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 27),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "You have successfully completed ${habit.name}.",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+        });
+  }
 
   void markHabitProgress(
       List<Habit> habitlist, int index, DateTime currentDate) {
@@ -169,9 +203,25 @@ class _HabitListState extends State<HabitList>
   //   }
   // }
 
+  void checkHabitCompletedAndCallDialog() {
+    DateTime currentDay =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    for (Habit habit in Boxes.getHabits().values.toList()) {
+      // print(daysBetween(habit.habitStartDate, currentDay));
+      if (habit.getProgressRate() == 100) {
+        habitCompletedDialog(habit);
+        deleteHabit(habit);
+        addToCompletedHabits(habit);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // print("Running Build");
+    // if (checkHabitCompleted()) {
+    //   habitCompletedDialog();
+    // }
     return Scaffold(
         backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -218,29 +268,24 @@ class _HabitListState extends State<HabitList>
                                     borderRadius: BorderRadius.circular(15.0)),
                                 color: const Color.fromRGBO(40, 40, 40, 1),
                                 child: ListTile(
-                                    title: Column(
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              habitlist[index].name.toString(),
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-
-                                            //used to rebuild widgets when Day changes, not actually displayed
-                                            SizedBox(
-                                              width: 0,
-                                              height: 0,
-                                              child: Text(formatDate(
-                                                  currentTime,
-                                                  [dd, '-', mm, '-', yyyy])),
-                                            ),
-                                          ],
+                                        Text(
+                                          habitlist[index].name.toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
-                                        // Text("hey")
+
+                                        //used to rebuild widgets when Day changes, not actually displayed
+                                        SizedBox(
+                                          width: 0,
+                                          height: 0,
+                                          child: Text(formatDate(
+                                              currentTime,
+                                              [dd, '-', mm, '-', yyyy])),
+                                        ),
                                       ],
                                     ),
                                     leading: Container(
@@ -281,6 +326,7 @@ class _HabitListState extends State<HabitList>
                                                     currentDate)) {
                                               markHabitProgress(habitlist,
                                                   index, currentDate);
+                                              checkHabitCompletedAndCallDialog();
                                             } else {
                                               print(habitlist[index]
                                                   .completedDays);
@@ -407,7 +453,7 @@ class _HabitListState extends State<HabitList>
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    insetPadding: EdgeInsets.all(30.0),
+                                    insetPadding: const EdgeInsets.all(30.0),
                                     title: const Text("Pick your Habit color"),
                                     content: ColorPicker(
                                         pickerColor: color,

@@ -18,6 +18,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(HabitAdapter());
   await Hive.openBox<Habit>('habits');
+  await Hive.openBox<Habit>('completedHabits');
 
   runApp(
     MaterialApp(home: LoginCheck(), routes: {

@@ -24,7 +24,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       fields[4] as int,
       fields[5] as int,
       fields[6] as int,
-      fields[7] as List<DateTime>
+      fields[7] as List<DateTime>,
+      fields[8] as DateTime,
+      fields[8] as bool
     );
   }
 

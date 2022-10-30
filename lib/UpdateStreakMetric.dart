@@ -3,8 +3,7 @@ import 'package:habit_tracker/model/Habit.dart';
 
 void updateStreakMetrics(Habit habit, DateTime currentDate) {
   if (daysBetween(habit.streakStartDate, currentDate) == habit.streaks) {
-    
-    print("is it?"+ habit.ishabitAlreadyRegisteredForTheDay(currentDate).toString());
+    // print("is it?"+ habit.ishabitAlreadyRegisteredForTheDay(currentDate).toString());
 
     // editHabitStreaks(habit, habit.streaks + 1);
     if (habit.ishabitAlreadyRegisteredForTheDay(currentDate)) {
@@ -17,7 +16,10 @@ void updateStreakMetrics(Habit habit, DateTime currentDate) {
       // habit.save();
     }
   } else if (daysBetween(habit.streakStartDate, currentDate) > habit.streaks) {
-    habit.editHabitStreakBeginDate(currentDate);
+    // if (habit.ishabitAlreadyRegisteredForTheDay(currentDate)) {
+      habit.editHabitStreakBeginDate(currentDate);
+      
+    // }
     // showCompletedAnimationDialog();
     habit.editHabitStreaks(0);
   }
