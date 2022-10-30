@@ -21,10 +21,7 @@ class HabitDetailsPage extends StatelessWidget {
   HabitDetailsPage(this.habit, {super.key}) {
     print("Inside HabitDetailsPage");
 
-    updateStreakMetrics(
-        habit,
-        DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day));
+    
   }
 
   @override

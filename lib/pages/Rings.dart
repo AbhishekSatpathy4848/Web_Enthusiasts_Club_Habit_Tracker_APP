@@ -27,7 +27,7 @@ class Rings extends StatelessWidget {
                       children: [
                         const SizedBox(height: 40),
                         Ring(
-                          percent: habit.getProgressRate().toDouble(),
+                          percent: habit.progressRate.toDouble(),
                           color: RingColorScheme(
                               ringColor:
                                   Color.fromRGBO(249, 17, 79, 1)),
@@ -35,7 +35,7 @@ class Rings extends StatelessWidget {
                           radius: 50,
                           child: Center(
                               child: Text(
-                                  "${habit.getProgressRate().toString()}%",
+                                  "${habit.progressRate.toString()}%",
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 16,fontWeight: FontWeight.w500))),
                         ),
@@ -52,7 +52,7 @@ class Rings extends StatelessWidget {
                       children: [
                         const SizedBox(height: 40),
                         Ring(
-                          percent: habit.getSuccessRate().toDouble(),
+                          percent: habit.successRate.toDouble(),
                           color: RingColorScheme(
                               ringColor:
                                   const Color.fromARGB(255, 15, 232, 127)),
@@ -60,7 +60,7 @@ class Rings extends StatelessWidget {
                           radius: 50,
                           child: Center(
                               child: Text(
-                                  "${habit.getSuccessRate().toString()}%",
+                                  "${habit.successRate.toString()}%",
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 16,fontWeight: FontWeight.w500))),
                         ),

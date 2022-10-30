@@ -102,7 +102,8 @@ class _HabitListState extends State<HabitList>
         0,
         goalDays,
         [],
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
+        DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day));
     // habit.addToCompletedDays(dateTime)
     final box = Boxes.getHabits();
     box.add(habit);
@@ -189,6 +190,8 @@ class _HabitListState extends State<HabitList>
 
   void markHabitProgress(
       List<Habit> habitlist, int index, DateTime currentDate) {
+    habitlist[index].getProgressRate();
+    print(habitlist[index].getSuccessRate());
     habitlist[index].registerDay(currentDate);
     updateStreakMetrics(habitlist[index], currentDate);
     habitlist[index].save();
@@ -208,7 +211,7 @@ class _HabitListState extends State<HabitList>
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     for (Habit habit in Boxes.getHabits().values.toList()) {
       // print(daysBetween(habit.habitStartDate, currentDay));
-      if (habit.getProgressRate() == 100) {
+      if (habit.getProgressRate() >= 100) {
         habitCompletedDialog(habit);
         deleteHabit(habit);
         addToCompletedHabits(habit);
@@ -362,6 +365,14 @@ class _HabitListState extends State<HabitList>
                                       ],
                                     ),
                                     onTap: (() {
+                                      habitlist[index].getProgressRate();
+                                      print(habitlist[index].getSuccessRate());
+                                      updateStreakMetrics(
+                                          habitlist[index],
+                                          DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day));
                                       Navigator.push(
                                           context,
                                           CupertinoPageRoute(

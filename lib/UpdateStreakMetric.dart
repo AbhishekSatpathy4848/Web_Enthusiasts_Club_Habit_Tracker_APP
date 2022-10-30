@@ -11,7 +11,7 @@ void updateStreakMetrics(Habit habit,DateTime currentDate) {
     }
     // habit.save();
 
-    if (habit.maxStreaks < habit.streaks) {
+    if (habit.maxStreaks <= habit.streaks) {
       habit.updateMaxStreak(habit.streaks);
       habit.bestStreakStartDate = habit.streakStartDate;
       // habit.save();

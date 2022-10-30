@@ -25,13 +25,24 @@ class Habit extends HiveObject {
   @HiveField(8)
   DateTime bestStreakStartDate;
 
+  int successRate = 0;
+  int progressRate = 0;
+
   // double? successRate;
   // double? progressRate;
 
   // Habit(String name, Duration start, Duration end, int streaks,
   // double successRate, double progressRate) {
-  Habit(this.name, this.color, this.streakStartDate,this.habitStartDate, this.streaks, this.maxStreaks,
-      this.goalDays, this.completedDays,this.bestStreakStartDate);
+  Habit(
+      this.name,
+      this.color,
+      this.streakStartDate,
+      this.habitStartDate,
+      this.streaks,
+      this.maxStreaks,
+      this.goalDays,
+      this.completedDays,
+      this.bestStreakStartDate);
 
   addToCompletedDays(DateTime dateTime) {
     completedDays.add(dateTime);
@@ -40,7 +51,9 @@ class Habit extends HiveObject {
   int getSuccessRate() {
     // print(habit.completedDays.length);
     // print(daysBetween(habit.habitStartDate!,DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day +1)).toString());
-    return ((completedDays.length /
+    // if (!ishabitAlreadyRegisteredForTheDay(DateTime(
+    // DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
+    successRate = ((completedDays.length /
                 (daysBetween(
                         habitStartDate,
                         DateTime(DateTime.now().year, DateTime.now().month,
@@ -48,19 +61,32 @@ class Habit extends HiveObject {
                     1)) *
             100)
         .round();
+    // }
+    // else{
+    //   successRate = ((completedDays.length /
+    //               (daysBetween(
+    //                       habitStartDate,
+    //                       DateTime(DateTime.now().year, DateTime.now().month,
+    //                           DateTime.now().day)))) *
+    //           100)
+    //       .round();
+    // }
+    if (successRate > 100) {
+      successRate = 100;
+    }
+    return successRate;
   }
 
   int getProgressRate() {
     // if(habit.completedDays.length == 1){
     //     return ((1 / habit.goalDays) * 100).round();
     // }
-
     print(DateTime(
         DateTime.now().year, DateTime.now().month, DateTime.now().day));
     if (completedDays.contains(DateTime(
         DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
       print("here");
-      return (((daysBetween(
+      progressRate = (((daysBetween(
                           habitStartDate,
                           DateTime(DateTime.now().year, DateTime.now().month,
                               DateTime.now().day)) +
@@ -68,15 +94,23 @@ class Habit extends HiveObject {
                   goalDays) *
               100)
           .round();
+      if (progressRate > 100) {
+        progressRate = 100;
+      }
+      return progressRate;
     }
     print("here1");
-    return (((daysBetween(
+    progressRate = (((daysBetween(
                     habitStartDate,
                     DateTime(DateTime.now().year, DateTime.now().month,
                         DateTime.now().day))) /
                 goalDays) *
             100)
         .round();
+    if (progressRate > 100) {
+      progressRate = 100;
+    }
+    return progressRate;
   }
 
   void editHabitStreaks(int streaks) {
@@ -106,5 +140,4 @@ class Habit extends HiveObject {
     // print(habit.streaks);
     // habit.save();
   }
-
 }
