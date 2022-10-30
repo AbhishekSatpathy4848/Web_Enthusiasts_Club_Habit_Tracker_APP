@@ -7,13 +7,25 @@ class Login extends StatelessWidget {
   Login({super.key});
 
   // Future<FirebaseApp> _initializeFirebase() async {
-  Future signIn() async {
-    try{
+  Future signIn(context) async {
+    try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
-    } on FirebaseAuthException catch (error){
-      
+    } on FirebaseAuthException catch (error) {
+      print(error.code);
+      if (error.code == 'invalid-email') {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Invalid Email!!')));
+      }
+      else if(error.code == 'user-not-found'){
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('User not found!!')));
+      }
+      else if(error.code == 'wrong-password'){
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Incorrect Password!!')));
+      }
     }
   }
 
@@ -33,8 +45,10 @@ class Login extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       // backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
       body: Container(
-        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('images/BackgroundStars.jpeg') ,fit: BoxFit.cover)),
-
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('images/BackgroundStars.jpeg'),
+                fit: BoxFit.cover)),
         child: Form(
           key: _formKey,
           child: Padding(
@@ -43,18 +57,31 @@ class Login extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                const Text("Welcome Back!!",style: TextStyle(color:  Color.fromARGB(255, 237, 183, 5),fontWeight: FontWeight.bold,fontSize: 38,letterSpacing: 1.2),textAlign: TextAlign.center,),
+                const Text(
+                  "Welcome Back!!",
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 237, 183, 5),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 38,
+                      letterSpacing: 1.2),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 20),
-                const Text("Let's Build some tiny habits!",style: TextStyle(color:  Colors.blue,fontWeight: FontWeight.bold,fontSize: 30,letterSpacing: 1.2),textAlign: TextAlign.center,),
-      
+                const Text(
+                  "Let's Build some tiny habits!",
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      letterSpacing: 1.2),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 30),
                 TextFormField(
                   validator: (value) {
-                    if (value!.isNotEmpty) {
-                      print(1);
-                      return 'Please enter some text';
+                    if (value == null || value.isEmpty) {
+                      return 'Field cannot be left blank';
                     } else {
-                      print(2);
                       return null;
                     }
                   },
@@ -77,7 +104,7 @@ class Login extends StatelessWidget {
                 TextFormField(
                   validator: ((value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
+                      return 'Field cannot be left blank';
                     } else {
                       return null;
                     }
@@ -95,9 +122,11 @@ class Login extends StatelessWidget {
                 RawMaterialButton(
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                   onPressed: () {
-                      // email = emailController.text.trim();
-                      // password = passwordController.text.trim();
-                      signIn();
+                    // email = emailController.text.trim();
+                    // password = passwordController.text.trim();
+                    if (_formKey.currentState!.validate()) {
+                      signIn(context);
+                    }
                   },
                   fillColor: Colors.blue,
                   shape: RoundedRectangleBorder(
@@ -111,7 +140,8 @@ class Login extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text("Sign In",
-                            style: TextStyle(color: Colors.white, fontSize: 18)),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18)),
                       ]),
                 ),
                 Row(
