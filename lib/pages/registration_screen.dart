@@ -13,17 +13,31 @@ class Registration extends StatelessWidget {
 
   final confirmPasswordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   // String email = '';
-  Future registerUser() async {
+  Future registerUser(context) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
-    } catch (signUpError) {
-      if (signUpError is PlatformException) {
-        if (signUpError.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-          print("Email already registered");
-        }
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      Fluttertoast.showToast(
+          msg: "User Registered Successfully!!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM_LEFT);
+      Navigator.of(context).pop();
+    } on FirebaseAuthException catch (error) {
+      print(error.code);
+      if (error.code == 'invalid-email') {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Invalid Email!!')));
+      } else if (error.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('User Already Exists!!')));
+      } else if (error.code == 'weak-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please use a Stronger Password!!')));
       }
     }
   }
@@ -34,99 +48,140 @@ class Registration extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       // backgroundColor: Colors.grey[900],
       body: Container(
-        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('images/BackgroundStars.jpeg') as ImageProvider,fit: BoxFit.fill)),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('images/BackgroundStars.jpeg'),
+                fit: BoxFit.fill)),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // Text('$email and $password'),
-              const SizedBox(height: 20),
-              TextFormField(
-                validator: ((value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  } else {
-                    return null;
-                  }
-                }),
-                keyboardType: TextInputType.emailAddress,
-                controller: emailController,
-                style: const TextStyle(
-                    // color: Colors.grey[600]
-                    ),
-                decoration: const InputDecoration(
-                    suffixIcon: Icon(Icons.email),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                // Text('$email and $password'),
+                const Text(
+                  "Let's get you signed up!!",
+                  style: TextStyle(
+                      color: Colors.amber,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 36,
+                      letterSpacing: 1.2,
+                      fontFamily: 'Open Sans-2'),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
+                TextFormField(
+                  validator: ((value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Field cannot be left blank';
+                    } else {
+                      return null;
+                    }
+                  }),
+                  keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
+                  style: const TextStyle(
+                      // color: Colors.grey[600]
+                      ),
+                  decoration: const InputDecoration(
+                      suffixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
+                      hintText: 'Enter Your Email',
+                      labelStyle: TextStyle(
+                          // fontWeight: FontWeight.bold,
+                          // color: Colors.amberAccent[200],
+                          // fontSize: 24
+                          )),
+                ),
+                const SizedBox(height: 30),
+                TextFormField(
+                  validator: ((value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Field cannot be left blank';
+                    } else {
+                      return null;
+                    }
+                  }),
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    suffixIcon: Icon(Icons.lock),
                     border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Enter Your Email',
-                    labelStyle: TextStyle(
-                        // fontWeight: FontWeight.bold,
-                        // color: Colors.amberAccent[200],
-                        // fontSize: 24
-                        )),
-              ),
-              const SizedBox(height: 30),
-              TextFormField(
-                validator: ((value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  } else {
-                    return null;
-                  }
-                }),
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  suffixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                  hintText: 'Enter Your Password',
+                    labelText: 'Password',
+                    hintText: 'Enter Your Password',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              TextFormField(
-                validator: ((value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  } else {
-                    return null;
-                  }
-                }),
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  suffixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(),
-                  labelText: 'Confirm Password',
-                  hintText: 'Enter Your Password',
+                const SizedBox(height: 30),
+                TextFormField(
+                  validator: ((value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Field cannot be left blank';
+                    } else {
+                      return null;
+                    }
+                  }),
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    suffixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(),
+                    labelText: 'Confirm Password',
+                    hintText: 'Enter Your Password',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              RawMaterialButton(
+                const SizedBox(height: 30),
+                RawMaterialButton(
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                   onPressed: () async {
-                          // if(passwordController.text.trim().isNotEmpty == confirmPasswordController.text.trim().isNotEmpty){
-                  if (passwordController.text.trim() ==
-                      confirmPasswordController.text.trim()) {
-                    if (passwordController.text.trim().length >= 6) {
-                      await registerUser();
-                      Navigator.of(context).pop();
-                    } else {
-                      Fluttertoast.showToast(
-                          msg:
-                              "Passwords should be more than 6 characters long!!",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER);
+                    // if(passwordController.text.trim().isNotEmpty == confirmPasswordController.text.trim().isNotEmpty){
+                    // if (passwordController.text.trim() ==
+                    //     confirmPasswordController.text.trim()) {
+                    //   if (passwordController.text.trim().length >= 6) {
+                    //     await registerUser();
+                    //     Navigator.of(context).pop();
+                    //   } else if (passwordController.text.trim().isEmpty ||
+                    //       confirmPasswordController.text.trim().isEmpty) {
+                    //     Fluttertoast.showToast(
+                    //         msg: "Fields cannot be left blank!!",
+                    //         toastLength: Toast.LENGTH_SHORT,
+                    //         gravity: ToastGravity.BOTTOM_LEFT);
+                    //   } else {
+                    //     Fluttertoast.showToast(
+                    //         msg:
+                    //             "Passwords should be at least 6 characters long!!",
+                    //         toastLength: Toast.LENGTH_SHORT,
+                    //         gravity: ToastGravity.BOTTOM_LEFT);
+                    //   }
+                    // } else if (passwordController.text.trim() !=
+                    //     confirmPasswordController.text.trim()) {
+                    //   Fluttertoast.showToast(
+                    //     msg: "Passwords don't Match!!",
+                    //     toastLength: Toast.LENGTH_SHORT,
+                    //     gravity: ToastGravity.CENTER,
+                    //   );
+                    // }
+                    if (_formKey.currentState!.validate()) {
+                      if (passwordController.text.trim() ==
+                          confirmPasswordController.text.trim()) {
+                        // if (passwordController.text.trim().length >= 6) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Registering User...')));
+                        await registerUser(context);
+                      } else {
+                        //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        //           content: Text(
+                        //               "Passwords should be at least 6 characters long!!")));
+                        //     }
+                        //   } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Passwords don't Match!!")));
+                      }
                     }
-                  } else {
-                    Fluttertoast.showToast(
-                      msg: "Passwords don't Match!!",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                    );
-                  }
                   },
                   fillColor: Colors.blue,
                   shape: RoundedRectangleBorder(
@@ -140,11 +195,12 @@ class Registration extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text("Sign Up",
-                            style: TextStyle(color: Colors.white, fontSize: 18)),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18)),
                       ]),
-                // )
-              ),
-              Row(
+                  // )
+                ),
+                Row(
                   children: [
                     const Text("Already have an Account?"),
                     TextButton(
@@ -158,7 +214,8 @@ class Registration extends StatelessWidget {
                         child: const Text("Sign In"))
                   ],
                 )
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -3,30 +3,28 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Login extends StatelessWidget {
+  Login({super.key});
 
-  @override
-  State<Login> createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
   // Future<FirebaseApp> _initializeFirebase() async {
-  //   FirebaseApp firebaseApp = await Firebase.initializeApp();
-  //   return firebaseApp;
-  // }
-
   Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim());
+    try{
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+    } on FirebaseAuthException catch (error){
+      
+    }
   }
 
   final _formKey = GlobalKey<FormState>();
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   String email = '';
+
   String password = '';
 
   @override
@@ -35,7 +33,7 @@ class _LoginState extends State<Login> {
       resizeToAvoidBottomInset: false,
       // backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
       body: Container(
-        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('images/BackgroundStars.jpeg') as ImageProvider,fit: BoxFit.cover)),
+        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('images/BackgroundStars.jpeg') ,fit: BoxFit.cover)),
 
         child: Form(
           key: _formKey,
@@ -45,9 +43,9 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text("Welcome Back!!",style: TextStyle(color:  Color.fromARGB(255, 237, 183, 5),fontWeight: FontWeight.bold,fontSize: 38,letterSpacing: 1.2),textAlign: TextAlign.center,),
+                const Text("Welcome Back!!",style: TextStyle(color:  Color.fromARGB(255, 237, 183, 5),fontWeight: FontWeight.bold,fontSize: 38,letterSpacing: 1.2),textAlign: TextAlign.center,),
                 const SizedBox(height: 20),
-                Text("Let's Build some tiny habits!",style: TextStyle(color:  Colors.blue,fontWeight: FontWeight.bold,fontSize: 30,letterSpacing: 1.2),textAlign: TextAlign.center,),
+                const Text("Let's Build some tiny habits!",style: TextStyle(color:  Colors.blue,fontWeight: FontWeight.bold,fontSize: 30,letterSpacing: 1.2),textAlign: TextAlign.center,),
       
                 const SizedBox(height: 30),
                 TextFormField(
