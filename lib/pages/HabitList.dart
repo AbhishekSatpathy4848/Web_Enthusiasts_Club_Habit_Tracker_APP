@@ -3,6 +3,8 @@
 // import 'dart:html';
 import 'dart:ui';
 import 'package:activity_ring/activity_ring.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,6 +26,8 @@ import 'package:lottie/lottie.dart';
 import 'dart:math';
 import 'package:checkmark/checkmark.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'dart:convert';
 
 class HabitList extends StatefulWidget {
   const HabitList({super.key});
@@ -76,10 +80,18 @@ class _HabitListState extends State<HabitList>
     });
   }
 
+  // openHiveBox() async {
+  //   print("here1");
+  //   await Hive.openBox<Habit>('habits');
+  //   await Hive.openBox<Habit>('completedHabits');
+  //   print("here2");
+  // }
+
   @override
   void initState() {
     super.initState();
-    print("hey");
+    // openHiveBox();
+    print("init state");
     handleAppLifecycleState();
     setColorChoice();
     animationController =
@@ -104,6 +116,22 @@ class _HabitListState extends State<HabitList>
         [],
         DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day));
+    // try {
+    //   print("hey123");
+    //   final database = FirebaseDatabase.instance.ref();
+    //   database
+    //       .child(FirebaseAuth.instance.currentUser!.uid.toString())
+    //       .set({"name":habit.name,"color": habit.color.toString(),"streakStartDate" :habit.streakStartDate.toString(),
+    //   "habitStartDate": habit.habitStartDate.toString(),
+    //   "streaks":habit.streaks,
+    //   "maxStreaks":habit.maxStreaks,
+    //   "goal":habit.goalDays,
+    //   "completedDays":habit.completedDays.toString(),
+    //   "bestStreakDate":habit.bestStreakStartDate.toString()});
+    // } catch (e) {
+    //   print(e);
+    // }
+
     // habit.addToCompletedDays(dateTime)
     final box = Boxes.getHabits();
     box.add(habit);
@@ -234,6 +262,7 @@ class _HabitListState extends State<HabitList>
               backgroundColor: const Color.fromRGBO(40, 40, 40, 1),
               foregroundColor: Colors.blue,
               onPressed: () {
+                Boxes.getHabits();
                 // NotificationApi.showNotification(
                 //       title: "First Flutter Notification",
                 //       body: "We are building the IRIS Flutter Project");

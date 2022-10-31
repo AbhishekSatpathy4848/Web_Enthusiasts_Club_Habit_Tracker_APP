@@ -12,6 +12,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
 
+
   @override
   State<Home> createState() => _HomeState();
 }
@@ -23,14 +24,16 @@ class _HomeState extends State<Home> {
   //   });
   // }
 
+  
+
   int index = 0;
   final screen = [HabitList(), Stats(), Profile()];
 
-  @override
-  void dispose() {
-    super.dispose();
-    Hive.close();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   Hive.close();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,10 @@ class _HomeState extends State<Home> {
       // backgroundColor: Colors.grey[900],
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
-        title: Text("Habit Tracker",style: TextStyle(color: Colors.amberAccent[200]),),
+        title: Text(
+          "Habit Tracker",
+          style: TextStyle(color: Colors.amberAccent[200]),
+        ),
         centerTitle: true,
         // actions: [
         //   IconButton(

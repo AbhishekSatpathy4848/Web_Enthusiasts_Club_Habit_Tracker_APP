@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:habit_tracker/BestStreakWidget.dart';
@@ -12,6 +14,7 @@ import 'package:clean_calendar/clean_calendar.dart';
 import 'package:habit_tracker/UpdateStreakMetric.dart';
 import 'package:habit_tracker/pages/Rings.dart';
 import 'package:habit_tracker/Calendar.dart';
+import 'package:intl/intl.dart';
 
 class HabitDetailsPage extends StatelessWidget {
   // suprHabitDetailsPage({super.key});
@@ -41,7 +44,7 @@ class HabitDetailsPage extends StatelessWidget {
           padding: const EdgeInsets.all(15),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
                   decoration: BoxDecoration(
@@ -91,7 +94,26 @@ class HabitDetailsPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 20, horizontal: 10),
                             child: BestStreakWidget(habit),
-                          ))
+                          )),
+                const SizedBox(height: 10,),
+                Container(
+                  decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.0),
+                              color: Colors.grey[900]),
+                              child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.create,color: habit.color,size: 30,),
+                                const SizedBox(width: 6),
+                                const Text("Created on ",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900,fontSize: 16),),
+                                const SizedBox(width: 3),
+                                Text(DateFormat.yMMMd('en_US').format(habit.habitStartDate),style: TextStyle(color: habit.color,fontWeight: FontWeight.w900,fontSize: 16),),
+                              ],
+                            ),
+                          )),
             ],
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:habit_tracker/model/Habit.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -9,22 +10,25 @@ class Login extends StatelessWidget {
   // Future<FirebaseApp> _initializeFirebase() async {
   Future signIn(context) async {
     try {
+      await Hive.openBox<Habit>('habits');
+      await Hive.openBox<Habit>('completedHabits');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Logging in...')));
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } on FirebaseAuthException catch (error) {
       print(error.code);
       if (error.code == 'invalid-email') {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Invalid Email!!')));
-      }
-      else if(error.code == 'user-not-found'){
+      } else if (error.code == 'user-not-found') {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('User not found!!')));
-      }
-      else if(error.code == 'wrong-password'){
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Incorrect Password!!')));
+      } else if (error.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Incorrect Password!!')));
       }
     }
   }
@@ -85,6 +89,7 @@ class Login extends StatelessWidget {
                       return null;
                     }
                   },
+                  keyboardType: TextInputType.emailAddress,
                   controller: emailController,
                   style: const TextStyle(
                       // color: Colors.grey[600]

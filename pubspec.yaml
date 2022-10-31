@@ -54,6 +54,7 @@ dependencies:
   checkmark: ^0.0.2+1
   clean_calendar: ^0.6.2
   intl: ^0.17.0
+  firebase_database: ^9.1.7
 
 dev_dependencies: 
   flutter_test:

@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:habit_tracker/pages/HabitDetailsPage.dart';
 import 'package:habit_tracker/CompletedHabitsPage.dart';
+import 'package:habit_tracker/FirebaseRealtime/write.dart';
+import 'package:hive/hive.dart';
 
 class Profile extends StatelessWidget {
   Profile({super.key});
@@ -22,22 +24,27 @@ class Profile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                // width: MediaQuery.of(context).size.width,
+                  // width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),color: const Color.fromRGBO(40, 40, 40, 1)),
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: const Color.fromRGBO(40, 40, 40, 1)),
                   child: GestureDetector(
                     onTap: () => Navigator.push(
                         context,
                         CupertinoPageRoute(
-                            builder: ((context) => const CompletedHabitsPage()))),
+                            builder: ((context) =>
+                                const CompletedHabitsPage()))),
                     child: ListTile(
                       title: Row(
                         children: const [
                           SizedBox(width: 10),
-                          Text("Show Completed Habits",style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                          color: Colors.white),),
+                          Text(
+                            "Show Completed Habits",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                                color: Colors.white),
+                          ),
                           SizedBox(width: 10),
                           Icon(
                             Icons.navigate_next,
@@ -51,35 +58,43 @@ class Profile extends StatelessWidget {
               Container(
                   // width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),color: const Color.fromRGBO(40, 40, 40, 1)),
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: const Color.fromRGBO(40, 40, 40, 1)),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 20),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(width: 10),
+                        // const SizedBox(width: 10),
                         const Text("Your Email ID:",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Color.fromRGBO(255, 192, 29, 1))),
-                          
-                          const SizedBox(width: 10,),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Color.fromRGBO(255, 192, 29, 1))),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(user!.email.toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                                color: Colors.white)),
+                        const Spacer(),
+                        const Icon(Icons.mail_outline,color: Colors.red)
 
-                        Text(user!.email!,style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                          color: Colors.white)),
                       ],
                     ),
                   )),
-                const SizedBox(height: 15),
+              const SizedBox(height: 15),
               RawMaterialButton(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 onPressed: () {
+                  writeToDatabase();
+                  Hive.deleteFromDisk();
                   FirebaseAuth.instance.signOut();
                 },
-                fillColor: Color.fromRGBO(40, 40, 40, 1),
+                fillColor: const Color.fromRGBO(40, 40, 40, 1),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
                 child: Row(
@@ -99,5 +114,3 @@ class Profile extends StatelessWidget {
         ));
   }
 }
-
-
