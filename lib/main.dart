@@ -59,7 +59,10 @@ class LoginCheck extends StatelessWidget {
             // await Hive.openBox<Habit>('completedHabits');
               
               print("hello");
-              if (snapshot.hasError) {
+              if (snapshot.hasData) {
+                print("Login Successful");
+                return Home();
+              } else if (snapshot.hasError) {
                 print("Error");
                 Fluttertoast.showToast(
                   msg: "There was an Error in Logging you in!!",
