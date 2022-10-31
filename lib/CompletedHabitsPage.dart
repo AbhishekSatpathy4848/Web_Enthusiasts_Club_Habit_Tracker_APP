@@ -21,16 +21,16 @@ class CompletedHabitsPage extends StatelessWidget {
       ),
       backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 28.0, 20.0, 0.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 28.0, 20.0, 20.0),
         child: ValueListenableBuilder(
             valueListenable: Boxes.getCompletedHabits().listenable(),
             builder: ((context, value, child) {
-              List<Habit> habitList = Boxes.getCompletedHabits().values.toList();
+              Set<Habit> habitList = Boxes.getCompletedHabits().values.toSet();
               return ListView.builder(
                           itemCount: habitList.length,
                           itemBuilder: ((context, index) {
                             final completedHabits =
-                                Boxes.getCompletedHabits().values.toList();
+                                Boxes.getCompletedHabits().values.toSet();
                             return Card(
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(15.0)),
@@ -43,7 +43,7 @@ class CompletedHabitsPage extends StatelessWidget {
                                                       MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Text(
-                                                      completedHabits[index].name.toString(),
+                                                      completedHabits.elementAt(index).name.toString(),
                                                       style: const TextStyle(
                                                           color: Colors.white),
                                                     ),
@@ -58,7 +58,7 @@ class CompletedHabitsPage extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(15.0),
-                                                  color: completedHabits[index].color),
+                                                  color: completedHabits.elementAt(index).color),
                                             ),
                                             onTap: (() {
                                               Navigator.push(
@@ -66,7 +66,7 @@ class CompletedHabitsPage extends StatelessWidget {
                                                   CupertinoPageRoute(
                                                       builder: ((context) =>
                                                           HabitDetailsPage(
-                                                              completedHabits[index]))));
+                                                              completedHabits.elementAt(index)))));
                                               // Navigator.push(context, )
                                             }),
                                             trailing:  Row(
@@ -78,7 +78,7 @@ class CompletedHabitsPage extends StatelessWidget {
                                                 color: Color.fromARGB(
                                                     255, 225, 90, 78)),
                                             onPressed: () =>
-                                                deleteHabit(habitList[index]),
+                                                deleteHabit(habitList.elementAt(index)),
                                           )
                                               ],
                                             ),

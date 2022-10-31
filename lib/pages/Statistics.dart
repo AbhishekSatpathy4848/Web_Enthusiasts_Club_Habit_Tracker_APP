@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/SuccessRateChart.dart';
 import 'package:habit_tracker/ProgressRateChart.dart';
 import 'package:hive/hive.dart';
+import 'package:habit_tracker/StreakViewWidget.dart';
 // import 'package:habit_tracker/NotificationAPI.dart';
 
 class Stats extends StatefulWidget {
@@ -27,10 +28,10 @@ class _StatsState extends State<Stats> {
               const SizedBox(height: 15),
               Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: SuccessRateChart()),
               const SizedBox(height: 15),
-              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: SuccessRateChart())
+              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: StreakViewWidget())
               // SuccessRateLegend();
             ],
-          ),
+          ),  
         ),
       ),
     );

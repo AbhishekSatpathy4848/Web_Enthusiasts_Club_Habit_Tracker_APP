@@ -21,7 +21,7 @@ class Habit extends HiveObject {
   @HiveField(6)
   int goalDays;
   @HiveField(7)
-  List<DateTime> completedDays;
+  Set<DateTime> completedDays;
   @HiveField(8)
   DateTime bestStreakStartDate;
 

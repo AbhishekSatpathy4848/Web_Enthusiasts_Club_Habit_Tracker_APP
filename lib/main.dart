@@ -9,12 +9,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:habit_tracker/ColorAdapter.dart';
 // import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(HabitAdapter());
+  Hive.registerAdapter(ColorAdapter());
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Habit>('completedHabits');
   await Firebase.initializeApp();

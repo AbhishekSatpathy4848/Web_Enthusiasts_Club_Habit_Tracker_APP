@@ -11,7 +11,7 @@ class calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CleanCalendar(
-      datesForStreaks: habit.completedDays,
+      datesForStreaks: habit.completedDays.toList(),
       // datePickerCalendarView: DatePickerCalendarView.weekView,
       currentDateProperties: DatesProperties(
         datesDecoration: DatesDecoration(

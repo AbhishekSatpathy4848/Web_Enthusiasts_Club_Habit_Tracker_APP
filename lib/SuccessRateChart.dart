@@ -34,7 +34,7 @@ class SuccessRateChart extends StatelessWidget {
     );
   }
 
-  List<Widget> barCharts(List<Habit> habitlist, BuildContext context) {
+  List<Widget> barCharts(Set<Habit> habitlist, BuildContext context) {
     List<Widget> bars = [];
     double totalBarWidth = 180;
     // bars.add(const SizedBox(height: 20));
@@ -43,25 +43,25 @@ class SuccessRateChart extends StatelessWidget {
         bars.add(const SizedBox(height: 20));
       }
       bars.add(Row(mainAxisSize: MainAxisSize.min, children: [
-        container(habitlist[i], totalBarWidth),
+        container(habitlist.elementAt(i), totalBarWidth),
         const SizedBox(
           width: 10,
         ),
         Text(
-          "${habitlist[i].getSuccessRate()} %",
+          "${habitlist.elementAt(i).getSuccessRate()} %",
           style: TextStyle(color: amber, fontWeight: FontWeight.bold),
         )
       ]));
 
-      // bars.add(Row(mainAxisSize: MainAxisSize.min,children: [container(habitlist[i], totalBarWidth)]));
-      // bars.add(container(habitlist[i], totalBarWidth));
+      // bars.add(Row(mainAxisSize: MainAxisSize.min,children: [container(habitlist.elementAt(i), totalBarWidth)]));
+      // bars.add(container(habitlist.elementAt(i), totalBarWidth));
     }
 
     // bars.add(const SizedBox(height: 20));
     return bars;
   }
 
-  displayChartDialog(List<Habit> habitList, BuildContext context) {
+  displayChartDialog(Set<Habit> habitList, BuildContext context) {
     showDialog(
         context: context,
         builder: ((context) {
@@ -87,7 +87,7 @@ class SuccessRateChart extends StatelessWidget {
         );
       }
 
-  Ring ringChart(List<Habit> habitlist, BuildContext context, int i,
+  Ring ringChart(Set<Habit> habitlist, BuildContext context, int i,
       double radius, double width) {
     if (i == habitlist.length) {
       return Ring(
@@ -98,8 +98,8 @@ class SuccessRateChart extends StatelessWidget {
     }
 
     return Ring(
-      percent: habitlist[i].getSuccessRate().toDouble(),
-      color: RingColorScheme(ringColor: habitlist[i].color),
+      percent: habitlist.elementAt(i).getSuccessRate().toDouble(),
+      color: RingColorScheme(ringColor: habitlist.elementAt(i).color),
       radius: radius,
       width: width,
       child: ringChart(habitlist, context, i + 1, radius - width, width),
@@ -131,7 +131,7 @@ class SuccessRateChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int i = 0;
-    List<Habit> habitList = Boxes.getHabits().values.toList();
+    Set<Habit> habitList = Boxes.getHabits().values.toSet();
     return Padding(
         padding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 0.0),
         child: Column(
@@ -178,7 +178,7 @@ class SuccessRateChart extends StatelessWidget {
                     ),
                     itemCount: habitList.length,
                     itemBuilder: ((context, index) {
-                      return gridViewItem(habitList[index]);
+                      return gridViewItem(habitList.elementAt(index));
                     })),
               ),
             )

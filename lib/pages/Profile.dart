@@ -81,18 +81,23 @@ class Profile extends StatelessWidget {
                                 fontSize: 18,
                                 color: Colors.white)),
                         const Spacer(),
-                        const Icon(Icons.mail_outline,color: Colors.red)
-
+                        const Icon(Icons.mail_outline, color: Colors.red)
                       ],
                     ),
                   )),
               const SizedBox(height: 15),
               RawMaterialButton(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                onPressed: () {
-                  writeToDatabase();
-                  Hive.deleteFromDisk();
+                onPressed: () async {
+                  final currentUID;
+                  if (FirebaseAuth.instance.currentUser != null) {
+                    currentUID = FirebaseAuth.instance.currentUser!.uid;
+                  } else {
+                    currentUID = null;
+                    print("UID is null");
+                  }
                   FirebaseAuth.instance.signOut();
+                  writeToDatabase(currentUID);
                 },
                 fillColor: const Color.fromRGBO(40, 40, 40, 1),
                 shape: RoundedRectangleBorder(

@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:habit_tracker/model/Habit.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:habit_tracker/ColorAdapter.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -10,6 +12,10 @@ class Login extends StatelessWidget {
   // Future<FirebaseApp> _initializeFirebase() async {
   Future signIn(context) async {
     try {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Hive.initFlutter();
+      // Hive.registerAdapter(HabitAdapter());
+      // Hive.registerAdapter(ColorAdapter());
       await Hive.openBox<Habit>('habits');
       await Hive.openBox<Habit>('completedHabits');
       ScaffoldMessenger.of(context)
@@ -30,6 +36,9 @@ class Login extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Incorrect Password!!')));
       }
+    } catch (e) {
+      print("During Login");
+      print(e);
     }
   }
 
