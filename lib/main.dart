@@ -22,12 +22,12 @@ void main() async {
   await Firebase.initializeApp();
 
 
-  Fluttertoast.showToast(
-                  msg: "There was an Error in Logging you in!!",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                );
-  print("Hive Hive 121212");
+  // Fluttertoast.showToast(
+  //                 msg: "There was an Error in Logging you in!!",
+  //                 toastLength: Toast.LENGTH_SHORT,
+  //                 gravity: ToastGravity.CENTER,
+  //               );
+  // print("Hive Hive 121212");
 
   runApp(
     MaterialApp(

@@ -40,7 +40,7 @@ void read(String type) {
           .child(FirebaseAuth.instance.currentUser!.uid)
           .child(type)
           .children) {
-        print("asdas");
+        // print("asdas");
         // print(_convertToSet(json.decode(json
         //     .encode(dataSnapshot.child('completedDays').value.toString()))));
         Habit habit = Habit(
@@ -66,7 +66,8 @@ void read(String type) {
                 dataSnapshot.child('bestStreakDate').value.toString()));
         // final box = Boxes.getHabits();
         // print(habit.name);
-        Hive.box<Habit>(type).add(habit);
+        // Hive.box<Habit>(type).add(habit);
+        Hive.box<Habit>(type).put(habit.name,habit);
       }
     });
   } catch (e) {

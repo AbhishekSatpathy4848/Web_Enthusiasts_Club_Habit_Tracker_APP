@@ -28,6 +28,7 @@ class Boxes {
           .child('Signed out')
           .value
           .toString();
+       
        if (result == 'true') {
           print("First time database");
           readFromDatabase();

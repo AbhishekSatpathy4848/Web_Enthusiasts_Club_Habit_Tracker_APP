@@ -14,6 +14,12 @@ void writeToDatabase(currrentUID) async {
   print(currrentUID);
 
   try {
+    await database.child(currrentUID).remove();
+  } catch (e) {
+    print("Error in deleting from Firebase");
+  }
+
+  try {
     await database.child(currrentUID).child("Signed out").set("true");
     print(habitList.length);
     for (Habit habit in habitList) {
@@ -52,6 +58,7 @@ void writeToDatabase(currrentUID) async {
         "bestStreakDate": habit.bestStreakStartDate.toString()
       });
     }
+    Hive.close();
     Hive.deleteFromDisk();
   } catch (e) {
     print(e.toString());

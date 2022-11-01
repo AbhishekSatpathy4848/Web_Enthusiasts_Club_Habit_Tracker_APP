@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Registration extends StatelessWidget {
@@ -29,6 +27,7 @@ class Registration extends StatelessWidget {
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (error) {
       print(error.code);
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
       if (error.code == 'invalid-email') {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Invalid Email!!')));
@@ -169,7 +168,7 @@ class Registration extends StatelessWidget {
                         // if (passwordController.text.trim().length >= 6) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('Registering User...')));
+                                content: Text('Registering User...'),duration: Duration(days: 365),));
                         await registerUser(context);
                       } else {
                         //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

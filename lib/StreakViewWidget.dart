@@ -93,10 +93,15 @@ class StreakViewWidget extends StatelessWidget {
             // textDirection: TextDirection.ltr,
             // columnWidths: TableColumnWidth(),
             children: createTableRows()),
-        const SizedBox(height: 10),
-        const Center(
-            child: Text("No Habits Created",
-                style: TextStyle(color: Colors.white)))
+        createTableRows().length == 2 ? Center(
+            child: Column(
+              children: const[
+                SizedBox(height: 10),
+                Text("No Habits Created",
+                    style: TextStyle(color: Colors.white)),
+              ],
+            )) : const SizedBox()
+        
       ]),
     );
   }

@@ -10,22 +10,21 @@ class Login extends StatelessWidget {
   Login({super.key});
 
   // Future<FirebaseApp> _initializeFirebase() async {
-  Future signIn(context) async {
+  void signIn(context) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-      await Hive.initFlutter();
-      // Hive.registerAdapter(HabitAdapter());
-      // Hive.registerAdapter(ColorAdapter());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Logging in...'),duration: Duration(days: 365),));
+      // await Hive.initFlutter();
       await Hive.openBox<Habit>('habits');
       await Hive.openBox<Habit>('completedHabits');
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Logging in...')));
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } on FirebaseAuthException catch (error) {
       print(error.code);
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
       if (error.code == 'invalid-email') {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Invalid Email!!')));
@@ -37,6 +36,7 @@ class Login extends StatelessWidget {
             const SnackBar(content: Text('Incorrect Password!!')));
       }
     } catch (e) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
       print("During Login");
       print(e);
     }
@@ -58,7 +58,7 @@ class Login extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       // backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('images/BackgroundStars.jpeg'),
                 fit: BoxFit.cover)),

@@ -128,36 +128,21 @@ class _HabitListState extends State<HabitList>
         {},
         DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day));
-    // try {
-    //   print("hey123");
-    //   final database = FirebaseDatabase.instance.ref();
-    //   database
-    //       .child(FirebaseAuth.instance.currentUser!.uid.toString())
-    //       .set({"name":habit.name,"color": habit.color.toString(),"streakStartDate" :habit.streakStartDate.toString(),
-    //   "habitStartDate": habit.habitStartDate.toString(),
-    //   "streaks":habit.streaks,
-    //   "maxStreaks":habit.maxStreaks,
-    //   "goal":habit.goalDays,
-    //   "completedDays":habit.completedDays.toString(),
-    //   "bestStreakDate":habit.bestStreakStartDate.toString()});
-    // } catch (e) {
-    //   print(e);
-    // }
 
     // habit.addToCompletedDays(dateTime)
-    final box = Boxes.getHabits();
-    box.add(habit);
+    final box = Hive.box<Habit>('habits');
+    box.put(habit.name,habit);
     setColorChoice();
   }
 
   deleteHabit(Habit habit) {
     habit.delete();
-    addToCompletedHabits(habit);
+    // addToCompletedHabits(habit);
   }
 
   addToCompletedHabits(Habit habit) {
     final box = Boxes.getCompletedHabits();
-    box.add(habit);
+    box.put(habit.name,habit);
   }
 
   // void editHabitStreaks(Habit habit, int streaks) {
