@@ -105,7 +105,7 @@ class _HabitListState extends State<HabitList>
   }
 
   addHabit(String name, Color color, int goalDays) {
-    for (Habit habit in Boxes.getHabits().values.toSet()) {
+    for (Habit habit in Boxes.getHabits().values.toList()) {
       if (habit.name == name) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Habit name already exist!! Choose another name.")));
@@ -125,7 +125,7 @@ class _HabitListState extends State<HabitList>
         0,
         0,
         goalDays,
-        {},
+        [],
         DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day));
 
@@ -214,16 +214,17 @@ class _HabitListState extends State<HabitList>
   }
 
   void markHabitProgress(
-      Set<Habit> habitlist, int index, DateTime currentDate) {
-    habitlist.elementAt(index).getProgressRate();
-    print(habitlist.elementAt(index).getSuccessRate());
-    habitlist.elementAt(index).registerDay(currentDate);
-    updateStreakMetrics(habitlist.elementAt(index), currentDate);
-    habitlist.elementAt(index).save();
+      List<Habit> habitlist, int index, DateTime currentDate) async{
+    habitlist[index].registerDay(currentDate);
+    habitlist[index].getProgressRate();
+    habitlist[index].getSuccessRate();
+    updateStreakMetrics(habitlist[index], currentDate);
+    await habitlist[index].save();
+    checkHabitCompletedAndCallDialog();
   }
 
   // Widget chooseIcon(habitlist, index, currentDate) {
-  //   if (ishabitAlreadyRegisteredForTheDay(habitlist.elementAt(index), currentDate)) {
+  //   if (ishabitAlreadyRegisteredForTheDay(habitlist[index], currentDate)) {
   //     return const Icon(Icons.check, color: Color.fromARGB(255, 62, 236, 67));
   //   } else {
   //     return AnimatedIcon(
@@ -234,7 +235,7 @@ class _HabitListState extends State<HabitList>
   void checkHabitCompletedAndCallDialog() {
     DateTime currentDay =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    for (Habit habit in Boxes.getHabits().values.toSet()) {
+    for (Habit habit in Boxes.getHabits().values.toList()) {
       // print(daysBetween(habit.habitStartDate, currentDay));
       if (habit.getProgressRate() >= 100) {
         habitCompletedDialog(habit);
@@ -262,7 +263,7 @@ class _HabitListState extends State<HabitList>
                 // NotificationApi.showNotification(
                 //       title: "First Flutter Notification",
                 //       body: "We are building the IRIS Flutter Project");
-                if (Boxes.getHabits().values.toSet().length < 8) {
+                if (Boxes.getHabits().values.toList().length < 8) {
                   showHabitCreationDialog(context);
                 } else {
                   Fluttertoast.showToast(
@@ -282,7 +283,7 @@ class _HabitListState extends State<HabitList>
                 valueListenable: Boxes.getHabits().listenable(),
                 builder: ((context, box, widget) {
                   print("Running value listenable builder");
-                  Set<Habit> habitlist = box.values.toSet();
+                  List<Habit> habitlist = box.values.toList();
                   return ListView.builder(
                     itemCount: Boxes.getHabits().keys.length,
                     itemBuilder: ((context, index) {
@@ -301,7 +302,7 @@ class _HabitListState extends State<HabitList>
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          habitlist.elementAt(index).name.toString(),
+                                          habitlist[index].name.toString(),
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
@@ -321,7 +322,7 @@ class _HabitListState extends State<HabitList>
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(15.0),
-                                          color: habitlist.elementAt(index).color),
+                                          color: habitlist[index].color),
                                     ),
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -329,7 +330,7 @@ class _HabitListState extends State<HabitList>
                                         // IconButton(
                                         //     onPressed: () {
                                         //       if (!ishabitAlreadyRegistered(
-                                        //           habitlist.elementAt(index),
+                                        //           habitlist[index],
                                         //           currentDate)) {
                                         //         // animationController.forward();
                                         //         markHabitProgress(habitlist,
@@ -348,14 +349,14 @@ class _HabitListState extends State<HabitList>
                                             // isTicked = !isTicked;
                                             // print(isTicked);
                                             print("Tap detected");
-                                            if (!habitlist.elementAt(index)
+                                            if (!habitlist[index]
                                                 .ishabitAlreadyRegisteredForTheDay(
                                                     currentDate)) {
                                               markHabitProgress(habitlist,
                                                   index, currentDate);
-                                              checkHabitCompletedAndCallDialog();
+                                              
                                             } else {
-                                              print(habitlist.elementAt(index)
+                                              print(habitlist[index]
                                                   .completedDays);
                                               print(
                                                   "Already registerered for the day");
@@ -365,8 +366,8 @@ class _HabitListState extends State<HabitList>
                                           child: SizedBox(
                                             height: 30,
                                             width: 30,
-                                            child: CheckMark(
-                                              active: habitlist.elementAt(index)
+                                            child: CheckMark( 
+                                              active: habitlist[index]
                                                   .ishabitAlreadyRegisteredForTheDay(
                                                       currentDate),
                                               curve: Curves.decelerate,
@@ -385,15 +386,15 @@ class _HabitListState extends State<HabitList>
                                               color: Color.fromARGB(
                                                   255, 225, 90, 78)),
                                           onPressed: () =>
-                                              deleteHabit(habitlist.elementAt(index)),
+                                              deleteHabit(habitlist[index]),
                                         ),
                                       ],
                                     ),
                                     onTap: (() {
-                                      habitlist.elementAt(index).getProgressRate();
-                                      print(habitlist.elementAt(index).getSuccessRate());
+                                      habitlist[index].getProgressRate();
+                                      print(habitlist[index].getSuccessRate());
                                       updateStreakMetrics(
-                                          habitlist.elementAt(index),
+                                          habitlist[index],
                                           DateTime(
                                               DateTime.now().year,
                                               DateTime.now().month,
@@ -403,7 +404,7 @@ class _HabitListState extends State<HabitList>
                                           CupertinoPageRoute(
                                               builder: ((context) =>
                                                   HabitDetailsPage(
-                                                      habitlist.elementAt(index)))));
+                                                      habitlist[index]))));
                                       // Navigator.push(context, )
                                     }),
                                     onLongPress: () {
@@ -421,7 +422,7 @@ class _HabitListState extends State<HabitList>
                                                 backgroundColor:
                                                     Colors.grey[900],
                                                 child: dialogContent(
-                                                    habitlist.elementAt(index), context),
+                                                    habitlist[index], context),
                                               ),
                                             );
                                           });
@@ -559,7 +560,7 @@ class _HabitListState extends State<HabitList>
                           percent: habit.getProgressRate().toDouble(),
                           color: RingColorScheme(
                               ringColor:
-                                  const Color.fromARGB(255, 237, 183, 5)),
+                                  const Color.fromRGBO(249, 17, 79, 1)),
                           width: 15,
                           radius: 50,
                           child: Center(

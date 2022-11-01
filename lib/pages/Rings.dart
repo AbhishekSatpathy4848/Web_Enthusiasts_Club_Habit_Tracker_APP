@@ -10,17 +10,12 @@ class Rings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 260,
+        height: 220,
         child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: Column(
               children: [
-                Text(habit.name.toString(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -30,7 +25,7 @@ class Rings extends StatelessWidget {
                           percent: habit.progressRate.toDouble(),
                           color: RingColorScheme(
                               ringColor:
-                                  Color.fromRGBO(249, 17, 79, 1)),
+                                  const Color.fromRGBO(249, 17, 79, 1)),
                           width: 15,
                           radius: 50,
                           child: Center(

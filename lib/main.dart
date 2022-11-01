@@ -54,13 +54,6 @@ class LoginCheck extends StatelessWidget {
         body: StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: ((context, snapshot) {
-              // if (snapshot.connectionState == ConnectionState.waiting) {
-              //   return Center(child: CircularProgressIndicator());
-              // }
-              // await Hive.openBox<Habit>('habits');
-            // await Hive.openBox<Habit>('completedHabits');
-              
-              print("hello");
               if (snapshot.hasData) {
                 print("Login Successful");
                 return Home();

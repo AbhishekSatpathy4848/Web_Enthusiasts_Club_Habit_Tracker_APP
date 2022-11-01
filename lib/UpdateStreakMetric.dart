@@ -9,7 +9,6 @@ void updateStreakMetrics(Habit habit,DateTime currentDate) {
     if (habit.ishabitAlreadyRegisteredForTheDay(currentDate)) {
       habit.editHabitStreaks(habit.streaks + 1);
     }
-    // habit.save();
 
     if (habit.maxStreaks <= habit.streaks) {
       habit.updateMaxStreak(habit.streaks);

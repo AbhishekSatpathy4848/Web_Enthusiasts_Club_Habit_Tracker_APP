@@ -6,7 +6,7 @@ import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/boxes.dart';
 
 class StreakViewWidget extends StatelessWidget {
-  Set<Habit> habitList = Boxes.getHabits().values.toSet();
+  List<Habit> habitList = Boxes.getHabits().values.toList();
 
   StreakViewWidget({super.key}) {
     for (Habit habit in habitList) {
@@ -55,7 +55,12 @@ class StreakViewWidget extends StatelessWidget {
             Row(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(width: 30),
+                const SizedBox(width: 4),
+                Container(width: 8,height: 8,
+                    decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: habit.color)),
+                const SizedBox(width: 10),
                 Text(habit.name,
                     style: const TextStyle(
                         fontSize: 15, fontWeight: FontWeight.w600)),

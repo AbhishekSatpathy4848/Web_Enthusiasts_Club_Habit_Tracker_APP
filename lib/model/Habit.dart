@@ -21,7 +21,7 @@ class Habit extends HiveObject {
   @HiveField(6)
   int goalDays;
   @HiveField(7)
-  Set<DateTime> completedDays;
+  List<DateTime> completedDays;
   @HiveField(8)
   DateTime bestStreakStartDate;
 
@@ -61,6 +61,7 @@ class Habit extends HiveObject {
                     1)) *
             100)
         .round();
+    print("Completed Days ${completedDays.length}");
     // }
     // else{
     //   successRate = ((completedDays.length /

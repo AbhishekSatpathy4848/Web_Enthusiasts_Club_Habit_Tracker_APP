@@ -5,13 +5,13 @@ import 'package:habit_tracker/boxes.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-Set<DateTime> _convertToSet(String string) {
-  Set<DateTime> completedDays = {};
+List<DateTime> _convertToList(String string) {
+  List<DateTime> completedDays = [];
   string = string.substring(0, 1) + ' ' + string.substring(1);
   print(string);
   int l = 0, r = 25;
-  while (string[l] != '}') {
-    if (string[l] == ',' || string[l] == '{') {
+  while (string[l] != ']') {
+    if (string[l] == ',' || string[l] == '[') {
       l += 2;
     }
     print(l.toString() + r.toString());
@@ -60,8 +60,8 @@ void read(String type) {
             int.parse(dataSnapshot.child('streaks').value.toString()),
             int.parse(dataSnapshot.child('maxStreaks').value.toString()),
             int.parse(dataSnapshot.child('goal').value.toString()),
-            // dataSnapshot.child('completedDays').value as Set<DateTime>,
-            {},
+            // dataSnapshot.child('completedDays').value as List<DateTime>,
+            _convertToList(dataSnapshot.child('completedDays').value.toString()),
             DateTime.parse(
                 dataSnapshot.child('bestStreakDate').value.toString()));
         // final box = Boxes.getHabits();
