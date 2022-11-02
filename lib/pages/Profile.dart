@@ -16,6 +16,7 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Entered Profile build");
     return Scaffold(
         backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
         body: Padding(
@@ -75,7 +76,7 @@ class Profile extends StatelessWidget {
                         const SizedBox(
                           width: 10,
                         ),
-                        Text(user!.email.toString(),
+                        Text(user == null ? "NULL" : user!.email.toString(),
                             style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
@@ -89,17 +90,22 @@ class Profile extends StatelessWidget {
               RawMaterialButton(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 onPressed: () async {
-                  print("Sign out pressed 1");
-                  final currentUID = FirebaseAuth.instance.currentUser!.uid;
-                  // if (FirebaseAuth.instance.currentUser != null) {
-                  //   currentUID = FirebaseAuth.instance.currentUser!.uid;
-                  // } else {
-                  //   currentUID = null;
-                  //   print("UID is null");
-                  // }
-                  print("Sign out pressed 2");
-                  writeToDatabase(currentUID);
-                  FirebaseAuth.instance.signOut();
+                  try {
+                    print("Sign out pressed 1");
+                    final currentUID = FirebaseAuth.instance.currentUser!.uid;
+                    // if (FirebaseAuth.instance.currentUser != null) {
+                    //   currentUID = FirebaseAuth.instance.currentUser!.uid;
+                    // } else {
+                    //   currentUID = null;
+                    //   print("UID is null");
+                    // }
+                    print("Sign out pressed 2");
+                    writeToDatabase(currentUID);
+                    // Navigator.pop(context);
+                    await FirebaseAuth.instance.signOut();
+                  } catch (e) {
+                    print("Error in Profile Page");
+                  }
                 },
                 fillColor: const Color.fromRGBO(40, 40, 40, 1),
                 shape: RoundedRectangleBorder(

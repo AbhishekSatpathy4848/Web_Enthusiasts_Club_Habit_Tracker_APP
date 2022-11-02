@@ -8,8 +8,8 @@ import 'package:hive/hive.dart';
 
 void writeToDatabase(currrentUID) async {
   print("Entered write");
-  List<Habit> habitList = Boxes.getHabits().values.toList();
-  List<Habit> completedHabitList = Boxes.getCompletedHabits().values.toList();
+  List<Habit> habitList = Hive.box<Habit>('habits').values.toList();
+  List<Habit> completedHabitList = Hive.box<Habit>('completedHabits').values.toList();
   final database = FirebaseDatabase.instance.ref();
   print("Entered write2");
 
@@ -22,7 +22,7 @@ void writeToDatabase(currrentUID) async {
   }
 
   try {
-    await database.child(currrentUID).child("Signed out").set("true");
+    // await database.child(currrentUID).child("Signed out").set("true");
     print(habitList.length);
     for (Habit habit in habitList) {
       await database
@@ -68,8 +68,8 @@ void writeToDatabase(currrentUID) async {
     // await Boxes.getHabits().deleteAll(Boxes.getHabits().keys);
     // await box2.deleteAll(box2.keys);
     print("Before clearing");
-    await Boxes.getHabits().clear();
-    await Boxes.getCompletedHabits().clear();
+    await Hive.box<Habit>('habits').clear();
+    await Hive.box<Habit>('completedHabits').clear();
     print("Before closing");
     await Hive.close();
     print("After closing");

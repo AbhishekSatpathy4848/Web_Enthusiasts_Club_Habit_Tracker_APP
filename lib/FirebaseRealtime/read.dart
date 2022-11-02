@@ -25,6 +25,7 @@ List<DateTime> _convertToList(String string) {
 }
 
 void read(String type) {
+  print("Entered read");
   try {
     print("reading $type");
     FirebaseDatabase.instance
@@ -38,6 +39,7 @@ void read(String type) {
       //     .child(type)
       //     .children
       //     .length);
+      if (FirebaseAuth.instance.currentUser == null) return;
       for (DataSnapshot dataSnapshot in event.snapshot
           .child(FirebaseAuth.instance.currentUser!.uid)
           .child(type)
@@ -79,9 +81,13 @@ void read(String type) {
 }
 
 void readFromDatabase() {
-  print("Enter read");
-  print("reading from here");
-  read("habits");
-  read("completedHabits");
-  print("Left read");
+  try {
+    print("Enter read");
+    print("reading from here");
+    read("habits");
+    read("completedHabits");
+    print("Left read");
+  } catch (e) {
+    print("here here read.dart");
+  }
 }

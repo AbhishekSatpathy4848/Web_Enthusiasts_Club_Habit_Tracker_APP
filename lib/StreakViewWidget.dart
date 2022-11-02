@@ -4,9 +4,10 @@ import 'package:habit_tracker/UpdateStreakMetric.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/boxes.dart';
+import 'package:hive/hive.dart';
 
 class StreakViewWidget extends StatelessWidget {
-  List<Habit> habitList = Boxes.getHabits().values.toList();
+  List<Habit> habitList = Hive.box<Habit>('habits').values.toList();
 
   StreakViewWidget({super.key}) {
     for (Habit habit in habitList) {
@@ -61,9 +62,11 @@ class StreakViewWidget extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: habit.color)),
                 const SizedBox(width: 10),
-                Text(habit.name,
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w600)),
+                Flexible(
+                  child: Text(habit.name,
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w600)),
+                ),
               ],
             ),
             Text(habit.streaks.toString(),

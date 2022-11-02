@@ -6,6 +6,8 @@ import 'package:habit_tracker/FirebaseRealtime/read.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
+//update the local storage hive with data from the database
+
 class Boxes {
   // static Future openHabits() async {
   //   print("opening habits");
@@ -19,46 +21,47 @@ class Boxes {
   //   await Hive.openBox<Habit>('completedHabits');
   // }
 
-  static Future handleWhatToReturn() async {}
+  static fillHive() {
+    print("Started filling hive");
 
-  static Box<Habit> getHabits() {
-    print("Accessing Boxes1");
+    readFromDatabase();
 
     // Hive.boxExists("habits").then((value) => print("box exits $value"));
-    String? result;
-    FirebaseDatabase.instance.ref().onValue.listen((event) {
-      print("-1");
-      result = event.snapshot
-          .child(FirebaseAuth.instance.currentUser!.uid)
-          .child('Signed out')
-          .value
-          .toString();
-      print("-2");
-    });
+    // String? result;
+    // FirebaseDatabase.instance.ref().onValue.listen((event) {
+      // print("-1");
+      // result = event.snapshot
+      //     .child(FirebaseAuth.instance.currentUser!.uid)
+      //     .child('Signed out')
+      //     .value
+      //     .toString();
+      // print("-2");
+      // if (result == 'true') {
+      //   print("First time database");
+      //   print("-3");
+        // readFromDatabase();
+        // print("-4");
+        // FirebaseDatabase.instance
+        //     .ref()
+        //     .child(FirebaseAuth.instance.currentUser!.uid)
+        //     .child('Signed out')
+        //     .set('false');
+        // print("-5");
+      // }
+      // print("-6");
+    // });
     // });
     // print("-6");
-    if (result == 'true') {
-      print("First time database");
-      print("-3");
-      readFromDatabase();
-      print("-4");
-      FirebaseDatabase.instance
-          .ref()
-          .child(FirebaseAuth.instance.currentUser!.uid)
-          .child('Signed out')
-          .set('false');
-      print("-5");
-    }
-    print("-6");
 
-    return Hive.box<Habit>('habits');
+    // return Hive.box<Habit>('habits');
+    print("Finished Filling Hive");
   }
 
-  static Box<Habit> getCompletedHabits() {
-    print("Accessing Box 2");
+  // static Box<Habit> getCompletedHabits() {
+  //   print("Accessing Box 2");
 
-    return Hive.box<Habit>('completedHabits');
-  }
+  //   return Hive.box<Habit>('completedHabits');
+  // }
 
   // static Future<Box<Habit>> getHabits() async {
   //   await Hive.openBox<Habit>('habits');

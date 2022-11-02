@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/boxes.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/pages/Home.dart';
 import 'package:habit_tracker/pages/login_screen.dart';
@@ -14,6 +15,7 @@ import 'package:habit_tracker/ColorAdapter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await Hive.initFlutter();
   Hive.registerAdapter(HabitAdapter());
   Hive.registerAdapter(ColorAdapter());
@@ -28,7 +30,7 @@ void main() async {
   // await Hive.openBox<Habit>('completedHabits');
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Habit>('completedHabits');
-  await Firebase.initializeApp();
+
 
   // Fluttertoast.showToast(
   //                 msg: "There was an Error in Logging you in!!",
@@ -64,6 +66,9 @@ class LoginCheck extends StatelessWidget {
             builder: ((context, snapshot) {
               if (snapshot.hasData) {
                 print("Login Successful");
+                  // print("Called-main filling hive");
+                  // Boxes.fillHive();
+                  // print("Done-main filling Hive");
                 return Home();
               } else if (snapshot.hasError) {
                 print("Error");

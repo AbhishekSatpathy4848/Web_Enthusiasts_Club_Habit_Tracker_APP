@@ -7,6 +7,8 @@ import 'package:habit_tracker/Metrics.dart';
 import 'package:activity_ring/activity_ring.dart';
 import 'dart:ui';
 
+import 'package:hive/hive.dart';
+
 class ProgressRateChart extends StatelessWidget {
   ProgressRateChart({super.key});
 
@@ -134,7 +136,7 @@ class ProgressRateChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int i = 0;
-    List<Habit> habitList = Boxes.getHabits().values.toList();
+    List<Habit> habitList = Hive.box<Habit>('habits').values.toList();
     return Padding(
         padding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 0.0),
         child: Column(

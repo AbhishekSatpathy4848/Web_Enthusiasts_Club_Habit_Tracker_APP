@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:habit_tracker/model/Habit.dart';
+import 'package:habit_tracker/boxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habit_tracker/ColorAdapter.dart';
 
@@ -19,16 +20,19 @@ class Login extends StatelessWidget {
         duration: Duration(days: 365),
       ));
       // await Hive.initFlutter();
-      bool ans = await Hive.boxExists("habits");
-      print("does box exits? ${await Hive.boxExists("habits")}");
-      await Hive.deleteFromDisk().then((value) => print("deleted"));
-      ans = await Hive.boxExists("habits");
-      print("does box exits? ${await Hive.boxExists("habits")}");
+      // bool ans = await Hive.boxExists("habits");
+      // print("does box exits? ${await Hive.boxExists("habits")}");
+      // await Hive.deleteFromDisk().then((value) => print("deleted"));
+      // ans = await Hive.boxExists("habits");
+      // print("does box exits? ${await Hive.boxExists("habits")}");
       await Hive.openBox<Habit>('habits');
       await Hive.openBox<Habit>('completedHabits');
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
+      print("Called-login filling hive");
+      await Boxes.fillHive();
+      print("Done-login filling Hive");
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } on FirebaseAuthException catch (error) {
       print(error.code);

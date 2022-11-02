@@ -12,7 +12,7 @@ class BestStreakWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset('images/Fire.png',width: 60,height: 60),
-        const SizedBox(width: 10),
+        const SizedBox(width: 6),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [const Text("BEST STREAK",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),),const SizedBox(height: 10),Text(habit.maxStreaks== 1 ? "${habit.maxStreaks} day" : "${habit.maxStreaks} days",style: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500),)],

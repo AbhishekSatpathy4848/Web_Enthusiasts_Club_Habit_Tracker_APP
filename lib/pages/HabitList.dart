@@ -108,7 +108,7 @@ class _HabitListState extends State<HabitList>
   }
 
   addHabit(String name, Color color, int goalDays) {
-    for (Habit habit in Boxes.getHabits().values.toList()) {
+    for (Habit habit in Hive.box<Habit>('habits').values.toList()) {
       if (habit.name == name) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Habit name already exist!! Choose another name.")));
@@ -144,7 +144,7 @@ class _HabitListState extends State<HabitList>
   }
 
   addToCompletedHabits(Habit habit) {
-    final box = Boxes.getCompletedHabits();
+    final box = Hive.box<Habit>('completedHabits');
     box.put(habit.name, habit);
   }
 
@@ -238,7 +238,7 @@ class _HabitListState extends State<HabitList>
   void checkHabitCompletedAndCallDialog() {
     DateTime currentDay =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    for (Habit habit in Boxes.getHabits().values.toList()) {
+    for (Habit habit in Hive.box<Habit>('habits').values.toList()) {
       // print(daysBetween(habit.habitStartDate, currentDay));
       if (habit.getProgressRate() >= 100) {
         habitCompletedDialog(habit);
@@ -266,7 +266,7 @@ class _HabitListState extends State<HabitList>
                 // NotificationApi.showNotification(
                 //       title: "First Flutter Notification",
                 //       body: "We are building the IRIS Flutter Project");
-                if (Boxes.getHabits().values.toList().length < 8) {
+                if (Hive.box<Habit>('habits').values.toList().length < 8) {
                   showHabitCreationDialog(context);
                 } else {
                   Fluttertoast.showToast(
@@ -283,12 +283,12 @@ class _HabitListState extends State<HabitList>
         body: Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 28.0, 20.0, 0.0),
             child: ValueListenableBuilder(
-                valueListenable: Boxes.getHabits().listenable(),
+                valueListenable: Hive.box<Habit>('habits').listenable(),
                 builder: ((context, box, widget) {
                   print("Running value listenable builder");
                   List<Habit> habitlist = box.values.toList();
                   return ListView.builder(
-                    itemCount: Boxes.getHabits().keys.length,
+                    itemCount: Hive.box<Habit>('habits').keys.length,
                     itemBuilder: ((context, index) {
                       final currentDate = DateTime(DateTime.now().year,
                           DateTime.now().month, DateTime.now().day);
