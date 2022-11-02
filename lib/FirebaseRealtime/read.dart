@@ -6,16 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 List<DateTime> _convertToList(String string) {
+  if (string == '[]') return [];
   List<DateTime> completedDays = [];
   string = string.substring(0, 1) + ' ' + string.substring(1);
-  print(string);
+  // print(string);
   int l = 0, r = 25;
   while (string[l] != ']') {
     if (string[l] == ',' || string[l] == '[') {
       l += 2;
     }
-    print(l.toString() + r.toString());
-    print(string.substring(l, r));
+    // print(l.toString() + r.toString());
+    // print(string.substring(l, r));
     completedDays.add(DateTime.parse(string.substring(l, r)));
     l = r;
     r = r + 25;
@@ -25,17 +26,18 @@ List<DateTime> _convertToList(String string) {
 
 void read(String type) {
   try {
+    print("reading $type");
     FirebaseDatabase.instance
         .ref()
         // .child(FirebaseAuth.instance.currentUser!.uid)
         // .child('CurrentHabits')
         .onValue
         .listen((event) {
-      print(event.snapshot
-          .child(FirebaseAuth.instance.currentUser!.uid)
-          .child(type)
-          .children
-          .length);
+      // print(event.snapshot
+      //     .child(FirebaseAuth.instance.currentUser!.uid)
+      //     .child(type)
+      //     .children
+      //     .length);
       for (DataSnapshot dataSnapshot in event.snapshot
           .child(FirebaseAuth.instance.currentUser!.uid)
           .child(type)
@@ -61,13 +63,14 @@ void read(String type) {
             int.parse(dataSnapshot.child('maxStreaks').value.toString()),
             int.parse(dataSnapshot.child('goal').value.toString()),
             // dataSnapshot.child('completedDays').value as List<DateTime>,
-            _convertToList(dataSnapshot.child('completedDays').value.toString()),
+            _convertToList(
+                dataSnapshot.child('completedDays').value.toString()),
             DateTime.parse(
                 dataSnapshot.child('bestStreakDate').value.toString()));
         // final box = Boxes.getHabits();
         // print(habit.name);
         // Hive.box<Habit>(type).add(habit);
-        Hive.box<Habit>(type).put(habit.name,habit);
+        Hive.box<Habit>(type).put(habit.name, habit);
       }
     });
   } catch (e) {
@@ -76,7 +79,9 @@ void read(String type) {
 }
 
 void readFromDatabase() {
+  print("Enter read");
   print("reading from here");
   read("habits");
   read("completedHabits");
+  print("Left read");
 }

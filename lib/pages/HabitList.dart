@@ -33,7 +33,10 @@ class HabitList extends StatefulWidget {
   const HabitList({super.key});
 
   @override
-  State<HabitList> createState() => _HabitListState();
+  State<HabitList> createState() {
+    print("Enter HabitList");
+   return _HabitListState();
+  }
 }
 
 class _HabitListState extends State<HabitList>
@@ -131,7 +134,7 @@ class _HabitListState extends State<HabitList>
 
     // habit.addToCompletedDays(dateTime)
     final box = Hive.box<Habit>('habits');
-    box.put(habit.name,habit);
+    box.put(habit.name, habit);
     setColorChoice();
   }
 
@@ -142,7 +145,7 @@ class _HabitListState extends State<HabitList>
 
   addToCompletedHabits(Habit habit) {
     final box = Boxes.getCompletedHabits();
-    box.put(habit.name,habit);
+    box.put(habit.name, habit);
   }
 
   // void editHabitStreaks(Habit habit, int streaks) {
@@ -214,7 +217,7 @@ class _HabitListState extends State<HabitList>
   }
 
   void markHabitProgress(
-      List<Habit> habitlist, int index, DateTime currentDate) async{
+      List<Habit> habitlist, int index, DateTime currentDate) async {
     habitlist[index].registerDay(currentDate);
     habitlist[index].getProgressRate();
     habitlist[index].getSuccessRate();
@@ -354,7 +357,6 @@ class _HabitListState extends State<HabitList>
                                                     currentDate)) {
                                               markHabitProgress(habitlist,
                                                   index, currentDate);
-                                              
                                             } else {
                                               print(habitlist[index]
                                                   .completedDays);
@@ -366,7 +368,7 @@ class _HabitListState extends State<HabitList>
                                           child: SizedBox(
                                             height: 30,
                                             width: 30,
-                                            child: CheckMark( 
+                                            child: CheckMark(
                                               active: habitlist[index]
                                                   .ishabitAlreadyRegisteredForTheDay(
                                                       currentDate),
@@ -559,8 +561,7 @@ class _HabitListState extends State<HabitList>
                         Ring(
                           percent: habit.getProgressRate().toDouble(),
                           color: RingColorScheme(
-                              ringColor:
-                                  const Color.fromRGBO(249, 17, 79, 1)),
+                              ringColor: const Color.fromRGBO(249, 17, 79, 1)),
                           width: 15,
                           radius: 50,
                           child: Center(

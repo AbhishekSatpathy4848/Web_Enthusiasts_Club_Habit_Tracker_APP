@@ -19,33 +19,43 @@ class Boxes {
   //   await Hive.openBox<Habit>('completedHabits');
   // }
 
+  static Future handleWhatToReturn() async {}
+
   static Box<Habit> getHabits() {
     print("Accessing Boxes1");
+
+    // Hive.boxExists("habits").then((value) => print("box exits $value"));
     String? result;
     FirebaseDatabase.instance.ref().onValue.listen((event) {
+      print("-1");
       result = event.snapshot
           .child(FirebaseAuth.instance.currentUser!.uid)
           .child('Signed out')
           .value
           .toString();
-       
-       if (result == 'true') {
-          print("First time database");
-          readFromDatabase();
-          FirebaseDatabase.instance
-              .ref()
-              .child(FirebaseAuth.instance.currentUser!.uid)
-              .child('Signed out')
-              .set('false');
-    }
-
+      print("-2");
     });
+    // });
+    // print("-6");
+    if (result == 'true') {
+      print("First time database");
+      print("-3");
+      readFromDatabase();
+      print("-4");
+      FirebaseDatabase.instance
+          .ref()
+          .child(FirebaseAuth.instance.currentUser!.uid)
+          .child('Signed out')
+          .set('false');
+      print("-5");
+    }
+    print("-6");
 
     return Hive.box<Habit>('habits');
   }
 
   static Box<Habit> getCompletedHabits() {
-    print("Accessing Boxes");
+    print("Accessing Box 2");
 
     return Hive.box<Habit>('completedHabits');
   }

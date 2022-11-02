@@ -7,9 +7,11 @@ import 'package:hive/hive.dart';
 // import 'package:habit_tracker/pages/HabitSet.dart';
 
 void writeToDatabase(currrentUID) async {
-  Set<Habit> habitList = Boxes.getHabits().values.toSet();
-  Set<Habit> completedHabitList = Boxes.getCompletedHabits().values.toSet();
+  print("Entered write");
+  List<Habit> habitList = Boxes.getHabits().values.toList();
+  List<Habit> completedHabitList = Boxes.getCompletedHabits().values.toList();
   final database = FirebaseDatabase.instance.ref();
+  print("Entered write2");
 
   print(currrentUID);
 
@@ -58,8 +60,29 @@ void writeToDatabase(currrentUID) async {
         "bestStreakDate": habit.bestStreakStartDate.toString()
       });
     }
-    Hive.close();
-    Hive.deleteFromDisk();
+    // await Hive.close();
+    // await Hive..delete(key)
+    // await Hive.deleteFromDisk();
+    // final box1 = ;
+    // final box2 = Hive.box("completedHabits");
+    // await Boxes.getHabits().deleteAll(Boxes.getHabits().keys);
+    // await box2.deleteAll(box2.keys);
+    print("Before clearing");
+    await Boxes.getHabits().clear();
+    await Boxes.getCompletedHabits().clear();
+    print("Before closing");
+    await Hive.close();
+    print("After closing");
+    await Hive.deleteFromDisk().then((value) => print("box has been deleted"));
+    print("After deleting");
+    // await box2.close();
+    // await Hive.box("habits").deleteFromDisk();
+    // await box2.deleteFromDisk();
+    print("is habits box open? ${Hive.isBoxOpen('habits')}");
+    // print(Hive.isBoxOpen( "completedHabits"));
+    bool ans = await Hive.boxExists("habits");
+    print("does box exits? ${await Hive.boxExists("habits")}");
+    // print(Hive.boxExists("completedHabits"));
   } catch (e) {
     print(e.toString());
     print("Write threw an error");

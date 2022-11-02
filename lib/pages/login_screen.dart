@@ -12,10 +12,18 @@ class Login extends StatelessWidget {
   // Future<FirebaseApp> _initializeFirebase() async {
   void signIn(context) async {
     try {
+      print("Inside Sign in");
       WidgetsFlutterBinding.ensureInitialized();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Logging in...'),duration: Duration(days: 365),));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Logging in...'),
+        duration: Duration(days: 365),
+      ));
       // await Hive.initFlutter();
+      bool ans = await Hive.boxExists("habits");
+      print("does box exits? ${await Hive.boxExists("habits")}");
+      await Hive.deleteFromDisk().then((value) => print("deleted"));
+      ans = await Hive.boxExists("habits");
+      print("does box exits? ${await Hive.boxExists("habits")}");
       await Hive.openBox<Habit>('habits');
       await Hive.openBox<Habit>('completedHabits');
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -34,6 +42,9 @@ class Login extends StatelessWidget {
       } else if (error.code == 'wrong-password') {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Incorrect Password!!')));
+      } else if (error.code == 'network-request-failed') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please connect to the internet!!')));
       }
     } catch (e) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();

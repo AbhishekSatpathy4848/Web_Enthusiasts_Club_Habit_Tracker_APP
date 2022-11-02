@@ -17,10 +17,18 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(HabitAdapter());
   Hive.registerAdapter(ColorAdapter());
+  // print("inside main");
+  // bool ans = await Hive.boxExists("habits");
+  // print("does box exits? ${await Hive.boxExists("habits")}");
+  // await Hive.deleteFromDisk().then((value) => print("deleted"));
+  // ans = await Hive.boxExists("habits");
+  // print("does box exits? ${await Hive.boxExists("habits")}");
+  // print("done");
+  // await Hive.openBox<Habit>('habits');
+  // await Hive.openBox<Habit>('completedHabits');
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Habit>('completedHabits');
   await Firebase.initializeApp();
-
 
   // Fluttertoast.showToast(
   //                 msg: "There was an Error in Logging you in!!",
@@ -31,7 +39,7 @@ void main() async {
 
   runApp(
     MaterialApp(
-      home: LoginCheck(),
+      home: const LoginCheck(),
       routes: {
         '/login': (context) => Login(),
         '/register': (context) => Registration(),

@@ -26,12 +26,12 @@ class _HomeState extends State<Home> {
   int index = 0;
   final screen = [HabitList(), Stats(), Profile()];
 
-  @override
-  void dispose() {
-    super.dispose();
-    Hive.close();
-    // Hive.deleteFromDisk();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   // Hive.close();
+  //   // Hive.deleteFromDisk();
+  // }
 
   @override
   Widget build(BuildContext context) {

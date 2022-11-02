@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:habit_tracker/boxes.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:habit_tracker/pages/HabitDetailsPage.dart';
-import 'package:habit_tracker/CompletedHabitsPage.dart';
+import 'package:habit_tracker/pages/CompletedHabitsPage.dart';
 import 'package:habit_tracker/FirebaseRealtime/write.dart';
 import 'package:hive/hive.dart';
 
@@ -89,15 +89,17 @@ class Profile extends StatelessWidget {
               RawMaterialButton(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 onPressed: () async {
-                  final currentUID;
-                  if (FirebaseAuth.instance.currentUser != null) {
-                    currentUID = FirebaseAuth.instance.currentUser!.uid;
-                  } else {
-                    currentUID = null;
-                    print("UID is null");
-                  }
-                  FirebaseAuth.instance.signOut();
+                  print("Sign out pressed 1");
+                  final currentUID = FirebaseAuth.instance.currentUser!.uid;
+                  // if (FirebaseAuth.instance.currentUser != null) {
+                  //   currentUID = FirebaseAuth.instance.currentUser!.uid;
+                  // } else {
+                  //   currentUID = null;
+                  //   print("UID is null");
+                  // }
+                  print("Sign out pressed 2");
                   writeToDatabase(currentUID);
+                  FirebaseAuth.instance.signOut();
                 },
                 fillColor: const Color.fromRGBO(40, 40, 40, 1),
                 shape: RoundedRectangleBorder(
