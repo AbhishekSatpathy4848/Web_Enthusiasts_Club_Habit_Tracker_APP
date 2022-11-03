@@ -3,6 +3,7 @@ App Project for Web Enthusiasts Club Recruitment - Task ID: Habit Tracker App
 
 ## How to install?
 To install this application, please download the APK file provided below on your android device.
+https://github.com/AbhishekSatpathy4848/Web_Enthusiasts_Club_Habit_Tracker_APP/blob/master/app-release.apk
 
 ## Technologies Used
 - Flutter
