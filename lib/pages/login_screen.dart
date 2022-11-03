@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +6,6 @@ import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/boxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habit_tracker/ColorAdapter.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -20,7 +17,7 @@ class Login extends StatelessWidget {
       WidgetsFlutterBinding.ensureInitialized();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Logging in...'),
-        // duration: Duration(days: 365),
+        duration: Duration(days: 365),
       ));
       // await Hive.initFlutter();
       // bool ans = await Hive.boxExists("habits");
@@ -34,25 +31,9 @@ class Login extends StatelessWidget {
           email: emailController.text.trim(),
           password: passwordController.text.trim());
       print("Called-login filling hive");
-      
-      final navigator = Navigator.of(context);
-      //start dialog
-      
-      
-      loadingHabitsDialog(context);
-
-      //  await Future.delayed(const Duration(seconds: 2));
-      
-      
-      Boxes.fillHabitsHive().then((_) {
-        navigator.pop();
-        print("Done-login filling Hive");
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      });
-     
-      //close dialog
-      // Navigator.pop(context);
-      
+      await Boxes.fillHive();
+      print("Done-login filling Hive");
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } on FirebaseAuthException catch (error) {
       print(error.code);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -70,7 +51,7 @@ class Login extends StatelessWidget {
             const SnackBar(content: Text('Please connect to the internet!!')));
       }
     } catch (e) {
-      //ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
       print("During Login");
       print(e);
     }
@@ -85,34 +66,6 @@ class Login extends StatelessWidget {
   String email = '';
 
   String password = '';
-
-  loadingHabitsDialog(context) {
-    showDialog(
-        context: context,
-        builder: ((context) {
-          return BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Dialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                backgroundColor: Colors.grey[900],
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30.0, 20.0, 20.0, 30.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text("Loading Habits...",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 18)),
-                      const SizedBox(height: 40),
-                      LoadingAnimationWidget.staggeredDotsWave(
-                          color: Colors.amberAccent[200]!, size: 60)
-                    ],
-                  ),
-                ),
-              ));
-        }));
-  }
 
   @override
   Widget build(BuildContext context) {
