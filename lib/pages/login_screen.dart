@@ -41,13 +41,13 @@ class Login extends StatelessWidget {
       
       loadingHabitsDialog(context);
 
-       await Future.delayed(const Duration(seconds: 2));
+      //  await Future.delayed(const Duration(seconds: 2));
       
       
       Boxes.fillHabitsHive().then((_) {
         navigator.pop();
         print("Done-login filling Hive");
-        // ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
       });
      
       //close dialog
