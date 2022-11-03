@@ -1,5 +1,5 @@
 # Web_Enthusiasts_Club_Habit_Tracker_APP
-App Project for Web Enthusiasts Club Recruitment - Task ID: 
+App Project for Web Enthusiasts Club Recruitment - Task ID: Habit Tracker App
 
 ## Technologies Used
 - Flutter
