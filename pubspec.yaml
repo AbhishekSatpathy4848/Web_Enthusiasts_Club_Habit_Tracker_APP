@@ -55,6 +55,7 @@ dependencies:
   clean_calendar: ^0.6.2
   intl: ^0.17.0
   firebase_database: ^9.1.7
+  loading_animation_widget: ^1.2.0+3
 
 dev_dependencies: 
   flutter_test:

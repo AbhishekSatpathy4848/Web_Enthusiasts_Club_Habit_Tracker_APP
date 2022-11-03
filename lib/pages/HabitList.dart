@@ -35,7 +35,7 @@ class HabitList extends StatefulWidget {
   @override
   State<HabitList> createState() {
     print("Enter HabitList");
-   return _HabitListState();
+    return _HabitListState();
   }
 }
 
@@ -135,6 +135,7 @@ class _HabitListState extends State<HabitList>
     // habit.addToCompletedDays(dateTime)
     final box = Hive.box<Habit>('habits');
     box.put(habit.name, habit);
+    habit.save();
     setColorChoice();
   }
 
@@ -146,6 +147,7 @@ class _HabitListState extends State<HabitList>
   addToCompletedHabits(Habit habit) {
     final box = Hive.box<Habit>('completedHabits');
     box.put(habit.name, habit);
+    habit.save();
   }
 
   // void editHabitStreaks(Habit habit, int streaks) {
@@ -449,90 +451,115 @@ class _HabitListState extends State<HabitList>
         context: context,
         builder: (context) {
           // return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            title: const Text(
-              "Add a Habit",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: AlertDialog(
+              contentPadding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              backgroundColor: Colors.grey[900],
+              title: const Text(
+                "Add a Habit",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.green),
+              ),
+              elevation: 100,
+              content: StatefulBuilder(builder: (context, setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: habitNameController,
+                      decoration: const InputDecoration(
+                        // suffixIcon: Icon(Icons.lock),
+                        border: OutlineInputBorder(),
+                        labelText: 'Habit Name',
+                        // hintText: 'Enter Your Password',
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: goalDaysController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Goal',
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              // setState() {
+                              // showColorPickerDialog(context);
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 5, sigmaY: 5),
+                                      child: AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0)),
+                                        backgroundColor:
+                                            const Color.fromRGBO(40, 40, 40, 1),
+                                        // insetPadding: const EdgeInsets.all(30.0),
+                                        contentPadding:
+                                            const EdgeInsets.fromLTRB(
+                                                0.0, 20.0, 0.0, 0.0),
+                                        // buttonPadding: const EdgeInsets.all(40.0),
+                                        title:
+                                            const Text("Pick your Habit color"),
+                                        content: ColorPicker(
+                                            pickerColor: color,
+                                            onColorChanged: (color) {
+                                              setState(() {
+                                                this.color = color;
+                                              });
+                                            }),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("Done"))
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            // },
+                            child: const Text("Choose Color")),
+                        Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: color),
+                          width: 20,
+                          height: 20,
+                        )
+                      ],
+                    )
+                  ],
+                );
+              }),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      // callbackFunction(Habit(controller.text.trim()));
+                      addHabit(habitNameController.text.trim(), color,
+                          int.parse(goalDaysController.text.trim()));
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Create Habit",
+                      style: TextStyle(color: Colors.amberAccent[200]),
+                    )),
+              ],
             ),
-            elevation: 100,
-            content: StatefulBuilder(builder: (context, setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: habitNameController,
-                    decoration: const InputDecoration(
-                      // suffixIcon: Icon(Icons.lock),
-                      border: OutlineInputBorder(),
-                      labelText: 'Habit Name',
-                      // hintText: 'Enter Your Password',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: goalDaysController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      // suffixIcon: Icon(Icons.lock),
-                      border: OutlineInputBorder(),
-                      labelText: 'Goal',
-                      // hintText: 'Enter Your Password',
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            // setState() {
-                            // showColorPickerDialog(context);
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    insetPadding: const EdgeInsets.all(30.0),
-                                    title: const Text("Pick your Habit color"),
-                                    content: ColorPicker(
-                                        pickerColor: color,
-                                        onColorChanged: (color) {
-                                          setState(() {
-                                            this.color = color;
-                                          });
-                                        }),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("Done"))
-                                    ],
-                                  );
-                                });
-                          },
-                          // },
-                          child: const Text("Choose Color")),
-                      Container(
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, color: color),
-                        width: 20,
-                        height: 20,
-                      )
-                    ],
-                  )
-                ],
-              );
-            }),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    // callbackFunction(Habit(controller.text.trim()));
-                    addHabit(habitNameController.text.trim(), color,
-                        int.parse(goalDaysController.text.trim()));
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Create Habit")),
-            ],
           );
           // }
           // );

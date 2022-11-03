@@ -67,22 +67,27 @@ void writeToDatabase(currrentUID) async {
     // final box2 = Hive.box("completedHabits");
     // await Boxes.getHabits().deleteAll(Boxes.getHabits().keys);
     // await box2.deleteAll(box2.keys);
-    print("Before clearing");
-    await Hive.box<Habit>('habits').clear();
-    await Hive.box<Habit>('completedHabits').clear();
-    print("Before closing");
-    await Hive.close();
-    print("After closing");
+
+
+    // print("Before clearing");
+    // await Hive.box<Habit>('habits').clear();
+    // await Hive.box<Habit>('completedHabits').clear();
+    // print("Before closing");
+    // await Hive.close();
+    // print("After closing");
     await Hive.deleteFromDisk().then((value) => print("box has been deleted"));
-    print("After deleting");
-    // await box2.close();
-    // await Hive.box("habits").deleteFromDisk();
-    // await box2.deleteFromDisk();
-    print("is habits box open? ${Hive.isBoxOpen('habits')}");
-    // print(Hive.isBoxOpen( "completedHabits"));
+    // print("After deleting");
+    // // await box2.close();
+    // // await Hive.box("habits").deleteFromDisk();
+    // // await box2.deleteFromDisk();
+    // print("is habits box open? ${Hive.isBoxOpen('habits')}");
+    // // print(Hive.isBoxOpen( "completedHabits"));
     bool ans = await Hive.boxExists("habits");
     print("does box exits? ${await Hive.boxExists("habits")}");
-    // print(Hive.boxExists("completedHabits"));
+    // // print(Hive.boxExists("completedHabits"));
+
+
+
   } catch (e) {
     print(e.toString());
     print("Write threw an error");

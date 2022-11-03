@@ -8,7 +8,7 @@ class Habit extends HiveObject {
   @HiveField(0)
   String name;
   @HiveField(1)
-  Color color;
+  Color color = Colors.black;
   @HiveField(2)
   DateTime streakStartDate;
   @HiveField(3)

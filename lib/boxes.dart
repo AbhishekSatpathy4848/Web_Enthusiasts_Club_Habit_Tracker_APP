@@ -21,10 +21,10 @@ class Boxes {
   //   await Hive.openBox<Habit>('completedHabits');
   // }
 
-  static fillHive() {
-    print("Started filling hive");
+  static fillHabitsHive() async {
+    print("Started filling Habits hive");
 
-    readFromDatabase();
+    readFromDatabase("habits");
 
     // Hive.boxExists("habits").then((value) => print("box exits $value"));
     // String? result;
@@ -54,7 +54,16 @@ class Boxes {
     // print("-6");
 
     // return Hive.box<Habit>('habits');
-    print("Finished Filling Hive");
+    print("Finished Filling Habits Hive");
+  }
+
+  static fillCompletedHabitsHive() {
+    print("Started filling Completed Habits hive");
+
+    readFromDatabase("completedHabits");
+
+    print("Finished Filling Completed Habits Hive");
+
   }
 
   // static Box<Habit> getCompletedHabits() {

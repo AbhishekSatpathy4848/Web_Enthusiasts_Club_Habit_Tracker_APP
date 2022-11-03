@@ -24,7 +24,7 @@ List<DateTime> _convertToList(String string) {
   return completedDays;
 }
 
-void read(String type) {
+void readFromDatabase(String type) {
   print("Entered read");
   try {
     print("reading $type");
@@ -80,14 +80,14 @@ void read(String type) {
   }
 }
 
-void readFromDatabase() {
-  try {
-    print("Enter read");
-    print("reading from here");
-    read("habits");
-    read("completedHabits");
-    print("Left read");
-  } catch (e) {
-    print("here here read.dart");
-  }
-}
+// void readFromDatabase() {
+//   try {
+//     print("Enter read");
+//     print("reading from here");
+//     read("habits");
+//     read("completedHabits");
+//     print("Left read");
+//   } catch (e) {
+//     print("here here read.dart");
+//   }
+// }
