@@ -1,12 +1,16 @@
 # Web_Enthusiasts_Club_Habit_Tracker_APP
+App Project for Web Enthusiasts Club Recruitment - Task ID: 
 
-# Habit-Tracking-App-Flutter
-App Project for IRIS Recruitment
+## Technologies Used
+- Flutter
+- Dart
+- Hive
+- Firebase
 
 ## List of Implemented Features
 
 ### Login and Registration: 
-- Login and Registration functionalities were implemented using the Firebase Authentication API. The app handles API responses related to incorrect passwords, invalid emails, weak passwords etc.
+- Login and Registration functionalities were implemented using the Firebase Authentication API. The app handles API responses related to incorrect passwords, invalid emails, weak passwords, network errors etc.
 
 - Implemented Auto-Login. The user doesn't need to authenticate everytime the app is restarted. Their authentication state is checked everytime the app is opened and they are auto-logged in depending on the AuthState.
 
@@ -78,20 +82,13 @@ https://user-images.githubusercontent.com/108116233/199285394-547d8df4-bac2-4ae1
 - Reward the user with Points/Badges for completing habits and breaking streaks records. 
 - Run a timer for each habit and increment habit count after that interval.
 - Incorporating Local Notifications to remind the user to complete his habits everyday.
-- Minor Tweaks to the UI.
-- Improve Code Quality and implement BLoC State Management.
+- Improve Code Quality and Readability.
 
 ## List of known Bugs
 - The UI doesn't scale appropriately in some devices.
-- Sometimes the app crashes while loading data from Hive.
-- Sometimes the app crashes on launch.
-
 
 ## Operating System Used for Development: 
 MacOS Monetery 12.6
-
-## Interest in UI/UX
-I'm quite fond of good design and seamless user experience but haven't really explored that domain yet.
 
 ## References:
 - The Net Ninja - YouTube Channel - Flutter Tutorial for Beginners : https://www.youtube.com/watch?v=1ukSR1GRtMU&list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ
@@ -100,6 +97,7 @@ I'm quite fond of good design and seamless user experience but haven't really ex
 - Johannes Milke - YouTube Channel : https://www.youtube.com/c/JohannesMilke
 - Firebase - Youtube Channel - Getting started with Firebase on Flutter : https://www.youtube.com/watch?v=EXp0gq9kGxI&t=855s
 - Flutter Documentation : https://docs.flutter.dev/
+- Johannes Milke - YouTube Channel - About Hive : https://www.youtube.com/watch?v=w8cZKm9s228&t=299s
 
 
 
