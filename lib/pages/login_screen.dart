@@ -31,9 +31,25 @@ class Login extends StatelessWidget {
           email: emailController.text.trim(),
           password: passwordController.text.trim());
       print("Called-login filling hive");
-      await Boxes.fillHive();
-      print("Done-login filling Hive");
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      
+      // final navigator = Navigator.of(context);
+      //start dialog
+      
+      
+      // loadingHabitsDialog(context);
+
+       await Future.delayed(const Duration(seconds: 2));
+      
+      
+      Boxes.fillHive().then((_) {
+        // navigator.pop();
+        print("Done-login filling Hive");
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      });
+     
+      //close dialog
+      // Navigator.pop(context);
+      
     } on FirebaseAuthException catch (error) {
       print(error.code);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();

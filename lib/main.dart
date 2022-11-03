@@ -20,7 +20,7 @@ void main() async {
   Hive.registerAdapter(HabitAdapter());
   Hive.registerAdapter(ColorAdapter());
   // print("inside main");
-  // bool ans = await Hive.boxExists("habits");
+  bool ans = await Hive.boxExists("habits");
   // print("does box exits? ${await Hive.boxExists("habits")}");
   // await Hive.deleteFromDisk().then((value) => print("deleted"));
   // ans = await Hive.boxExists("habits");
