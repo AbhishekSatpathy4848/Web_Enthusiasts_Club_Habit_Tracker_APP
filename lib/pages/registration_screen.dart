@@ -37,6 +37,9 @@ class Registration extends StatelessWidget {
       } else if (error.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Please use a Stronger Password!!')));
+      } else if (error.code == 'network-request-failed') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please connect to the internet!!')));
       }
     }
   }
@@ -44,7 +47,7 @@ class Registration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       // backgroundColor: Colors.grey[900],
       body: Container(
         decoration: const BoxDecoration(

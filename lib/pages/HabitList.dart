@@ -199,7 +199,7 @@ class _HabitListState extends State<HabitList>
                       const Text(
                         "Congratulations!!",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 27),
+                            fontWeight: FontWeight.bold, fontSize: 26),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 20),
@@ -306,10 +306,12 @@ class _HabitListState extends State<HabitList>
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          habitlist[index].name.toString(),
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                                        Flexible(
+                                          child: Text(
+                                            habitlist[index].name.toString(),
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
                                         ),
 
                                         //used to rebuild widgets when Day changes, not actually displayed
@@ -568,69 +570,75 @@ class _HabitListState extends State<HabitList>
 
   Widget dialogContent(Habit habit, BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 260,
+        // width: MediaQuery.of(context).size.width,
+        // height: 260,
         child: Padding(
             padding: const EdgeInsets.all(30.0),
-            child: Column(
-              children: [
-                Text(habit.name.toString(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 30),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 40),
-                        Ring(
-                          percent: habit.getProgressRate().toDouble(),
-                          color: RingColorScheme(
-                              ringColor: const Color.fromRGBO(249, 17, 79, 1)),
-                          width: 15,
-                          radius: 50,
-                          child: Center(
-                              child: Text(
-                                  "${habit.getProgressRate().toString()}%",
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 16))),
-                        ),
-                        // ),
-                        const SizedBox(height: 70),
-                        const Text(
-                          "Progress Rate",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        )
-                      ]),
-                  const SizedBox(width: 50),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 40),
-                        Ring(
-                          percent: habit.getSuccessRate().toDouble(),
-                          color: RingColorScheme(
-                              ringColor:
-                                  const Color.fromARGB(255, 15, 232, 127)),
-                          width: 15,
-                          radius: 50,
-                          child: Center(
-                              child: Text(
-                                  "${habit.getSuccessRate().toString()}%",
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 16))),
-                        ),
-                        // ),
-                        const SizedBox(height: 70),
-                        const Text(
-                          "Success Rate",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        )
-                      ]),
-                ]),
-              ],
+            child: Wrap(
+              children: [Column(
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(habit.name.toString(),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 30),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.center, 
+                    // mainAxisSize: MainAxisSize.max,
+                    children: [
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 40),
+                          Ring(
+                            percent: habit.getProgressRate().toDouble(),
+                            color: RingColorScheme(
+                                ringColor: const Color.fromRGBO(249, 17, 79, 1)),
+                            width: 15,
+                            radius: 50,
+                            child: Center(
+                                child: Text(
+                                    "${habit.getProgressRate().toString()}%",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 16))),
+                          ),
+                          // ),
+                          const SizedBox(height: 70),
+                          const Text(
+                            "Progress Rate",
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w900),
+                          )
+                        ]),
+                    const SizedBox(width: 22),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 40),
+                          Ring(
+                            percent: habit.getSuccessRate().toDouble(),
+                            color: RingColorScheme(
+                                ringColor:
+                                    const Color.fromARGB(255, 15, 232, 127)),
+                            width: 15,
+                            radius: 50,
+                            child: Center(
+                                child: Text(
+                                    "${habit.getSuccessRate().toString()}%",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 16))),
+                          ),
+                          // ),
+                          const SizedBox(height: 70),
+                          const Text(
+                            "Success Rate",
+                            style: TextStyle(color: Colors.white, fontSize: 16,fontWeight: FontWeight.w900),
+                          )
+                        ])
+                  ]),
+                ],
+              ),]
             )));
   }
 

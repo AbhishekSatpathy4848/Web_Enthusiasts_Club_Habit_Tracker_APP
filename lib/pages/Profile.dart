@@ -68,19 +68,23 @@ class Profile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // const SizedBox(width: 10),
-                        const Text("Your Email ID:",
+                        const Text("Email ID:",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 17,
                                 color: Color.fromRGBO(255, 192, 29, 1))),
                         const SizedBox(
                           width: 10,
                         ),
-                        Text(user == null ? "NULL" : user!.email.toString(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                                color: Colors.white)),
+                        Flexible(
+                          flex: 2,
+                          child: Text(
+                              user == null ? "NULL" : user!.email.toString(),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                  color: Colors.white)),
+                        ),
                         const Spacer(),
                         const Icon(Icons.mail_outline, color: Colors.red)
                       ],
