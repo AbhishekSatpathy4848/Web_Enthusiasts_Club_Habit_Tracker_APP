@@ -13,7 +13,6 @@ class Habit extends HiveObject {
   DateTime streakStartDate;
   @HiveField(3)
   DateTime habitStartDate;
-  // Duration? end;
   @HiveField(4)
   int streaks;
   @HiveField(5)
@@ -24,35 +23,33 @@ class Habit extends HiveObject {
   List<DateTime> completedDays;
   @HiveField(8)
   DateTime bestStreakStartDate;
-
+  @HiveField(9)
   int successRate = 0;
+  @HiveField(10)
   int progressRate = 0;
+  @HiveField(11)
+  DateTime? dailyReminderTime; 
 
-  // double? successRate;
-  // double? progressRate;
-
-  // Habit(String name, Duration start, Duration end, int streaks,
-  // double successRate, double progressRate) {
   Habit(
-      this.name,
-      this.color,
-      this.streakStartDate,
-      this.habitStartDate,
-      this.streaks,
-      this.maxStreaks,
-      this.goalDays,
-      this.completedDays,
-      this.bestStreakStartDate);
+      {required this.name,
+      required this.color,
+      required this.streakStartDate,
+      required this.habitStartDate,
+      this.streaks = 0,
+      this.maxStreaks = 0,
+      required this.goalDays,
+      required this.bestStreakStartDate,
+      required this.completedDays,
+      this.successRate = 0,
+      this.progressRate = 0,
+      this.dailyReminderTime})
+      : super();
 
   addToCompletedDays(DateTime dateTime) {
     completedDays.add(dateTime);
   }
 
-  int getSuccessRate() {
-    // print(habit.completedDays.length);
-    // print(daysBetween(habit.habitStartDate!,DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day +1)).toString());
-    // if (!ishabitAlreadyRegisteredForTheDay(DateTime(
-    // DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
+  void updateSuccessRate() {
     successRate = ((completedDays.length /
                 (daysBetween(
                         habitStartDate,
@@ -61,32 +58,14 @@ class Habit extends HiveObject {
                     1)) *
             100)
         .round();
-    print("Completed Days ${completedDays.length}");
-    // }
-    // else{
-    //   successRate = ((completedDays.length /
-    //               (daysBetween(
-    //                       habitStartDate,
-    //                       DateTime(DateTime.now().year, DateTime.now().month,
-    //                           DateTime.now().day)))) *
-    //           100)
-    //       .round();
-    // }
     if (successRate > 100) {
       successRate = 100;
     }
-    return successRate;
   }
 
-  int getProgressRate() {
-    // if(habit.completedDays.length == 1){
-    //     return ((1 / habit.goalDays) * 100).round();
-    // }
-    print(DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day));
+  void updateProgressRate() {
     if (completedDays.contains(DateTime(
         DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
-      print("here");
       progressRate = (((daysBetween(
                           habitStartDate,
                           DateTime(DateTime.now().year, DateTime.now().month,
@@ -98,9 +77,8 @@ class Habit extends HiveObject {
       if (progressRate > 100) {
         progressRate = 100;
       }
-      return progressRate;
+      return;
     }
-    print("here1");
     progressRate = (((daysBetween(
                     habitStartDate,
                     DateTime(DateTime.now().year, DateTime.now().month,
@@ -111,34 +89,25 @@ class Habit extends HiveObject {
     if (progressRate > 100) {
       progressRate = 100;
     }
-    return progressRate;
   }
 
   void editHabitStreaks(int streaks) {
     this.streaks = streaks;
-    // print(habit.streaks);
-    // habit.save();
   }
 
   void registerDay(DateTime currentDate) {
     completedDays.add(currentDate);
-    // habit.save();
   }
 
   bool ishabitAlreadyRegisteredForTheDay(DateTime currentDate) {
-    // return daysBetween(habit.streakStartDate!, currentDate) > habit.streaks;
     return completedDays.contains(currentDate);
   }
 
   void updateMaxStreak(int maxStreaks) {
     this.maxStreaks = maxStreaks;
-    // print(habit.streaks);
-    // habit.save();
   }
 
   void editHabitStreakBeginDate(DateTime currentDate) {
     streakStartDate = currentDate;
-    // print(habit.streaks);
-    // habit.save();
   }
 }
