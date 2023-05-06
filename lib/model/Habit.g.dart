@@ -17,22 +17,25 @@ class HabitAdapter extends TypeAdapter<Habit> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Habit(
-      fields[0] as String,
-      fields[1] as Color,
-      fields[2] as DateTime,
-      fields[3] as DateTime,
-      fields[4] as int,
-      fields[5] as int,
-      fields[6] as int,
-      (fields[7] as List).cast<DateTime>(),
-      fields[8] as DateTime,
+      name: fields[0] as String,
+      color: fields[1] as Color,
+      streakStartDate: fields[2] as DateTime,
+      habitStartDate: fields[3] as DateTime,
+      streaks: fields[4] as int,
+      maxStreaks: fields[5] as int,
+      goalDays: fields[6] as int,
+      bestStreakStartDate: fields[8] as DateTime,
+      completedDays: (fields[7] as List).cast<DateTime>(),
+      successRate: fields[9] as int,
+      progressRate: fields[10] as int,
+      dailyReminderTime: fields[11] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -50,7 +53,14 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(7)
       ..write(obj.completedDays)
       ..writeByte(8)
-      ..write(obj.bestStreakStartDate);
+      ..write(obj.bestStreakStartDate)
+      ..writeByte(9)
+      ..write(obj.successRate)
+      ..writeByte(10)
+      ..write(obj.progressRate)
+      ..writeByte(11)
+      ..write(obj.dailyReminderTime);
+
   }
 
   @override
