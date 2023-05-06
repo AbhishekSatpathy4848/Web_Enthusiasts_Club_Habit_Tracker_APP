@@ -1,14 +1,11 @@
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/boxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:habit_tracker/ColorAdapter.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -95,19 +92,11 @@ class Login extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
                 backgroundColor: Colors.grey[900],
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30.0, 20.0, 20.0, 30.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text("Loading Habits...",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 18)),
-                      const SizedBox(height: 40),
-                      LoadingAnimationWidget.staggeredDotsWave(
-                          color: Colors.amberAccent[200]!, size: 60)
-                    ],
-                  ),
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(30.0, 20.0, 20.0, 30.0),
+                  child: Text("Loading Habits...",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 18)),
                 ),
               ));
         }));

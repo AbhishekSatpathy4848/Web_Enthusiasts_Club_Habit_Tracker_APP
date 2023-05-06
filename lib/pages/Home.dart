@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:habit_tracker/UpdateStreakMetric.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/localNotificationService.dart';
 import 'package:habit_tracker/pages/HabitList.dart';
@@ -23,15 +25,31 @@ class _HomeState extends State<Home> {
   //   });
   // }
 
-  int index = 0;
-  final screen = [HabitList(), Stats(), Profile()];
+  handleAppLifecycleState() {
+    SystemChannels.lifecycle.setMessageHandler((msg) async {
+      if (msg == "AppLifecycleState.resumed") {
+        for (Habit habit in Hive.box<Habit>('habits').values.toList()) {
+          habit.updateProgressRate();
+          habit.updateSuccessRate();
+          updateStreakMetrics(
+              habit,
+              DateTime(DateTime.now().year, DateTime.now().month,
+                  DateTime.now().day));
+          await habit.save();
+        }
+      }
+      return null;
+    });
+  }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   // Hive.close();
-  //   // Hive.deleteFromDisk();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    handleAppLifecycleState();
+  }
+
+  int index = 0;
+  final screen = [const HabitList(), const Stats(), Profile()];
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +78,8 @@ class _HomeState extends State<Home> {
           //           const TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
           // child:
           BottomNavigationBar(
-        // backgroundColor: Colors.red,
+        backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
+        selectedFontSize: 12,
         type: BottomNavigationBarType.shifting,
         currentIndex: index,
         elevation: 0,

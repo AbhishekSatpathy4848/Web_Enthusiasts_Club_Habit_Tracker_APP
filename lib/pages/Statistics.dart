@@ -15,8 +15,6 @@ class Stats extends StatefulWidget {
 class _StatsState extends State<Stats> {
   @override
   Widget build(BuildContext context) {
-    // final currentDate = DateTime.now();
-    // List<Habit> habits = Boxes.getHabits().values.toList();
     return Scaffold(
       backgroundColor: const Color.fromRGBO(26,26,26,1),
       body: SingleChildScrollView(
@@ -24,12 +22,11 @@ class _StatsState extends State<Stats> {
           padding: const EdgeInsets.fromLTRB(20,20,20,20.0),
           child: Column(
             children: [
-              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: ProgressRateChart()),
+              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: const ProgressRateChart()),
               const SizedBox(height: 15),
               Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: SuccessRateChart()),
               const SizedBox(height: 15),
               Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: StreakViewWidget())
-              // SuccessRateLegend();
             ],
           ),  
         ),

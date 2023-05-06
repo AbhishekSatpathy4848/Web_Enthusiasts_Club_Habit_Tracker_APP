@@ -3,8 +3,8 @@ import 'package:habit_tracker/model/Habit.dart';
 import 'package:intl/intl.dart';
 
 class BestStreakWidget extends StatelessWidget {
-  BestStreakWidget(this.habit, {super.key});
-  late Habit habit;
+  final Habit habit;
+  const BestStreakWidget(this.habit, {super.key});
 
   @override
   Widget build(BuildContext context) {
