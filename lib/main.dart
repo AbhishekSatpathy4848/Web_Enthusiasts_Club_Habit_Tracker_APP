@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:habit_tracker/backup.dart';
 import 'package:habit_tracker/boxes.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/pages/Home.dart';
@@ -8,10 +10,11 @@ import 'package:habit_tracker/pages/login_screen.dart';
 import 'package:habit_tracker/pages/registration_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hive/hive.dart';
+import 'package:habit_tracker/provider_shared_state.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habit_tracker/ColorAdapter.dart';
-// import 'firebase_options.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,59 +22,53 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(HabitAdapter());
   Hive.registerAdapter(ColorAdapter());
-  // print("inside main");
-  // bool ans = await Hive.boxExists("habits");
-  // print("does box exits? ${await Hive.boxExists("habits")}");
-  // await Hive.deleteFromDisk().then((value) => print("deleted"));
-  // ans = await Hive.boxExists("habits");
-  // print("does box exits? ${await Hive.boxExists("habits")}");
-  // print("done");
-  // await Hive.openBox<Habit>('habits');
-  // await Hive.openBox<Habit>('completedHabits');
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Habit>('completedHabits');
-
-
-  // Fluttertoast.showToast(
-  //                 msg: "There was an Error in Logging you in!!",
-  //                 toastLength: Toast.LENGTH_SHORT,
-  //                 gravity: ToastGravity.CENTER,
-  //               );
-  // print("Hive Hive 121212");
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? lastBackedUpDate = prefs.getString("lastBackUpDate");
 
   runApp(
     MaterialApp(
-      home: const LoginCheck(),
+      home: LoginCheck(lastBackedUpDate: lastBackedUpDate),
       routes: {
         '/login': (context) => Login(),
         '/register': (context) => Registration(),
-        '/home': (context) => Home(),
+        '/home': (context) => const Home(),
       },
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
       themeMode: ThemeMode.dark,
+      builder: (context,child) => ChangeNotifierProvider(
+                    create: (context) {
+                      return SharedState(lastBackedUpDate);
+                    },
+                    child: child),
     ),
   );
 }
 
 class LoginCheck extends StatelessWidget {
-  const LoginCheck({super.key});
+  final String? lastBackedUpDate;
+  const LoginCheck({this.lastBackedUpDate, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
-            builder: ((context, snapshot) {
+            builder: (context, snapshot) {
               if (snapshot.hasData) {
-                print("Login Successful");
-                  // print("Called-main filling hive");
-                  // Boxes.fillHive();
-                  // print("Done-main filling Hive");
-                return Home();
+                // print("Login Successful");
+                // print("Called-main filling hive");
+                // Boxes.fillHive();
+                // print("Done-main filling Hive");
+                initialiseCronJob(
+                    FirebaseAuth.instance.currentUser!.uid, context);
+                // Obtain shared preferences.
+
+                  return const Home();
               } else if (snapshot.hasError) {
-                print("Error");
                 Fluttertoast.showToast(
                   msg: "There was an Error in Logging you in!!",
                   toastLength: Toast.LENGTH_SHORT,
@@ -82,6 +79,6 @@ class LoginCheck extends StatelessWidget {
                 // print("No Data");
                 return Login();
               }
-            })));
+            }));
   }
 }
