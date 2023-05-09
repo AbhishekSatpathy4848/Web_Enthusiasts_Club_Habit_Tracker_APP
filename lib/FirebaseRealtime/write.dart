@@ -25,19 +25,7 @@ Future<bool> writeToDatabase(currentUID, context) async {
           .child(currentUID)
           .child("habits")
           .child(database.push().key!)
-          .set({
-        "name": habit.name,
-        "color": habit.color.toString(),
-        "streakStartDate": habit.streakStartDate.toString(),
-        "habitStartDate": habit.habitStartDate.toString(),
-        "streaks": habit.streaks,
-        "maxStreaks": habit.maxStreaks,
-        "goal": habit.goalDays,
-        "completedDays": habit.completedDays.toString(),
-        "bestStreakDate": habit.bestStreakStartDate.toString(),
-        "successRate": habit.successRate,
-        "progressRate": habit.progressRate
-      });
+          .set(getHabitDataMap(habit));
     }
 
     for (Habit habit in completedHabitList) {
@@ -46,17 +34,7 @@ Future<bool> writeToDatabase(currentUID, context) async {
           .child(currentUID)
           .child("completedHabits")
           .child(database.push().key!)
-          .set({
-        "name": habit.name,
-        "color": habit.color.toString(),
-        "streakStartDate": habit.streakStartDate.toString(),
-        "habitStartDate": habit.habitStartDate.toString(),
-        "streaks": habit.streaks,
-        "maxStreaks": habit.maxStreaks,
-        "goal": habit.goalDays,
-        "completedDays": habit.completedDays.toString(),
-        "bestStreakDate": habit.bestStreakStartDate.toString()
-      });
+          .set(getHabitDataMap(habit));
     }
     final provider = Provider.of<SharedState>(context, listen: false);
     provider.setLastBackedUp =
@@ -70,4 +48,21 @@ Future<bool> writeToDatabase(currentUID, context) async {
   } catch (e) {
     rethrow;
   }
+}
+
+Map getHabitDataMap(Habit habit) {
+  return {
+    "name": habit.name,
+    "color": habit.color.toString(),
+    "streakStartDate": habit.streakStartDate.toString(),
+    "habitStartDate": habit.habitStartDate.toString(),
+    "streaks": habit.streaks,
+    "maxStreaks": habit.maxStreaks,
+    "goal": habit.goalDays,
+    "completedDays": habit.completedDays.toString(),
+    "bestStreakDate": habit.bestStreakStartDate.toString(),
+    "successRate": habit.successRate,
+    "progressRate": habit.progressRate,
+    "dailyReminderTime": habit.dailyReminderTime.toString(),
+  };
 }

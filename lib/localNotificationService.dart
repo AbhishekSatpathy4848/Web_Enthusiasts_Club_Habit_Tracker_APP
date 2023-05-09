@@ -1,37 +1,68 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:rxdart/subjects.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as timezone;
 
-class NotificationApi {
-  static final _notifications = FlutterLocalNotificationsPlugin();
+class LocalNotificationService {
+  static final FlutterLocalNotificationsPlugin _notifications =
+      FlutterLocalNotificationsPlugin();
 
-  static Future _notificationDetails() async {
-    print('uwevfwjfvewjefvwja');
-    // return NotificationDetails(
-    //     android: AndroidNotificationDetails(
-    //   'channel id',
-    //   'channel name',
-    //   channelDescription: 'channel description',
-    //   importance: Importance.max,
-    //   enableVibration: true
-    // ));
+  static Future init() async {
+    timezone.initializeTimeZones();
+    const InitializationSettings settings = InitializationSettings(
+      android: AndroidInitializationSettings("@mipmap/ic_launcher"),
+      iOS: DarwinInitializationSettings(),
+    );
+    await _notifications.initialize(settings);
   }
 
-  static Future showNotification(
-      {int id = 0, String? title, String? body, String? payload}) async {
-    final details = await _notificationDetails();
-    return _notifications.show(id, title, body, details, payload: payload);
+  static AndroidNotificationDetails _getAndroidNotificationDetails() {
+    return const AndroidNotificationDetails(
+      "0",
+      "habit_tracker",
+      importance: Importance.max,
+      priority: Priority.defaultPriority,
+    );
   }
 
-  // Future<void> intitialize() async {
-  //   const AndroidInitializationSettings androidInitializationSettings =
-  //       AndroidInitializationSettings("@drawable/ic_launcher");
-  //   const iosi
-  //   final InitializationSettings initializationSettings =
-  //       InitializationSettings(android: androidInitializationSettings);
-
-  //   await FlutterLocalNotificationsPlugin().initialize(initializationSettings, )
+  // static Future showNotificationsDaily(
+  //     {required int id,
+  //     String? title,
+  //     String? body,
+  //     String? payload,
+  //     required DateTime reminderTime}) async {
+  //   _notifications.showDailyAtTime(
+  //       id,
+  //       title,
+  //       body,
+  //       Time(reminderTime.hour, reminderTime.minute),
+  //       NotificationDetails(
+  //           android: _getAndroidNotificationDetails(),
+  //           iOS: const DarwinNotificationDetails()),
+  //       payload: payload);
   // }
+
+  static Future showScheduledNotification(
+      {required int id,
+      String? title,
+      String? body,
+      String? payload,
+      required DateTime scheduledTime}) async {
+      // scheduledTime.subtract(const Duration(days: 1));
+    _notifications.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(scheduledTime, tz.local),
+        NotificationDetails(
+            android: _getAndroidNotificationDetails(),
+            iOS: const DarwinNotificationDetails()),
+        payload: payload,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+            matchDateTimeComponents: DateTimeComponents.time);
+  }
+
+  static cancelNotifcation(int notificationId){
+    _notifications.cancel(notificationId);
+  }
 }

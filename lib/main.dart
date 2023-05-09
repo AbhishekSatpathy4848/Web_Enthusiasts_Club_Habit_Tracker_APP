@@ -1,9 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:habit_tracker/backup.dart';
-import 'package:habit_tracker/boxes.dart';
 import 'package:habit_tracker/model/Habit.dart';
 import 'package:habit_tracker/pages/Home.dart';
 import 'package:habit_tracker/pages/login_screen.dart';
@@ -15,9 +12,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habit_tracker/ColorAdapter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
   await Firebase.initializeApp();
   await Hive.initFlutter();
   Hive.registerAdapter(HabitAdapter());
@@ -39,11 +38,11 @@ void main() async {
         brightness: Brightness.dark,
       ),
       themeMode: ThemeMode.dark,
-      builder: (context,child) => ChangeNotifierProvider(
-                    create: (context) {
-                      return SharedState(lastBackedUpDate);
-                    },
-                    child: child),
+      builder: (context, child) => ChangeNotifierProvider(
+          create: (context) {
+            return SharedState(lastBackedUp: lastBackedUpDate);
+          },
+          child: child),
     ),
   );
 }
@@ -59,15 +58,9 @@ class LoginCheck extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                // print("Login Successful");
-                // print("Called-main filling hive");
-                // Boxes.fillHive();
-                // print("Done-main filling Hive");
-                initialiseCronJob(
+                  initialiseCronJob(
                     FirebaseAuth.instance.currentUser!.uid, context);
-                // Obtain shared preferences.
-
-                  return const Home();
+                return const Home();
               } else if (snapshot.hasError) {
                 Fluttertoast.showToast(
                   msg: "There was an Error in Logging you in!!",

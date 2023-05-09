@@ -21,12 +21,9 @@ List<DateTime> _convertToList(String string) {
   return completedDays;
 }
 
-void read(String type) {
+Future read(String type) {
   try {
-    FirebaseDatabase.instance
-        .ref()
-        .onValue
-        .listen((event) {
+    FirebaseDatabase.instance.ref().onValue.listen((event) {
       if (FirebaseAuth.instance.currentUser == null) return;
       for (DataSnapshot dataSnapshot in event.snapshot
           .child(FirebaseAuth.instance.currentUser!.uid)
@@ -35,43 +32,52 @@ void read(String type) {
         Habit habit = Habit(
           name: dataSnapshot.child('name').value.toString(),
           color: Color(int.parse(
-                dataSnapshot
-                    .child('color')
-                    .value
-                    .toString()
-                    .split('(0x')[1]
-                    .split(')')[0],
-                radix: 16)),
-              
-            streakStartDate: DateTime.parse(
-                dataSnapshot.child('streakStartDate').value.toString()),
-            habitStartDate: DateTime.parse(
-                dataSnapshot.child('habitStartDate').value.toString()),
-            streaks:  int.parse(dataSnapshot.child('streaks').value.toString()),
-            maxStreaks: int.parse(dataSnapshot.child('maxStreaks').value.toString()),
-            goalDays: int.parse(dataSnapshot.child('goal').value.toString()),
-            completedDays: _convertToList(
-                dataSnapshot.child('completedDays').value.toString()),
-            bestStreakStartDate:  DateTime.parse(
-                dataSnapshot.child('bestStreakDate').value.toString()),
-              successRate:
-                int.parse(dataSnapshot.child('successRate').value.toString()),
-              progressRate:
-                int.parse(dataSnapshot.child('progressRate').value.toString()));
+              dataSnapshot
+                  .child('color')
+                  .value
+                  .toString()
+                  .split('(0x')[1]
+                  .split(')')[0],
+              radix: 16)),
+          streakStartDate: DateTime.parse(
+              dataSnapshot.child('streakStartDate').value.toString()),
+          habitStartDate: DateTime.parse(
+              dataSnapshot.child('habitStartDate').value.toString()),
+          streaks: int.parse(dataSnapshot.child('streaks').value.toString()),
+          maxStreaks:
+              int.parse(dataSnapshot.child('maxStreaks').value.toString()),
+          goalDays: int.parse(dataSnapshot.child('goal').value.toString()),
+          completedDays: _convertToList(
+              dataSnapshot.child('completedDays').value.toString()),
+          bestStreakStartDate: DateTime.parse(
+              dataSnapshot.child('bestStreakDate').value.toString()),
+          successRate:
+              int.parse(dataSnapshot.child('successRate').value.toString()),
+          progressRate:
+              int.parse(dataSnapshot.child('progressRate').value.toString()),
+          // dailyReminderTime:
+          //     dataSnapshot.child('dailyReminderTime').value == "null"
+          //         ? null
+          //         : DateTime.parse(
+          //             dataSnapshot.child('dailyReminderTime').value.toString()),
+        );
 
-        Hive.box<Habit>(type).put(habit.name, habit);
+        Hive.box<Habit>(type)
+            .put("${habit.habitStartDate}${habit.name}", habit);
       }
     });
   } catch (e) {
     print("Read threw error");
   }
+  return Future.value();
 }
 
-void readFromDatabase() {
+Future readFromDatabase() async{
   try {
-    read("habits");
-    read("completedHabits");
+    await read("habits");
+    await read("completedHabits");
   } catch (e) {
     print("Error while reading from Firebase");
   }
+  return Future.value();
 }

@@ -60,7 +60,6 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..write(obj.progressRate)
       ..writeByte(11)
       ..write(obj.dailyReminderTime);
-
   }
 
   @override

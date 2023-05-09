@@ -28,7 +28,7 @@ class Habit extends HiveObject {
   @HiveField(10)
   int progressRate = 0;
   @HiveField(11)
-  DateTime? dailyReminderTime; 
+  DateTime? dailyReminderTime;
 
   Habit(
       {required this.name,
@@ -109,5 +109,12 @@ class Habit extends HiveObject {
 
   void editHabitStreakBeginDate(DateTime currentDate) {
     streakStartDate = currentDate;
+  }
+
+  bool isCompleted() {
+    if (progressRate >= 100) {
+      return true;
+    }
+    return false;
   }
 }

@@ -17,6 +17,7 @@ class Profile extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser;
   Profile({super.key});
   ValueNotifier<bool> backingUp = ValueNotifier(false);
+  ValueNotifier<bool> signingOut = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -72,64 +73,76 @@ class Profile extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // const Text("Email ID:",
-                            //     style: TextStyle(
-                            //         fontWeight: FontWeight.bold,
-                            //         fontSize: 17,
-                            //         color: Color.fromRGBO(255, 192, 29, 1))),
-                            // const SizedBox(
-                            //   width: 10,
-                            // ),
                             const Icon(Icons.mail_outline, color: Colors.red),
                             const SizedBox(width: 10),
-                            Text(user == null ? "NULL" : user!.email.toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.white)),
+                            Flexible(
+                              child: Text(
+                                  user == null
+                                      ? "NULL"
+                                      : user!.email.toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      color: Colors.white)),
+                            ),
                           ],
                         ),
                       )),
                   const SizedBox(height: 15),
-                  RawMaterialButton(
-                    onPressed: () async {
-                      if (backingUp.value) return;
-                      backingUp.value = true;
-                      final currentUID = FirebaseAuth.instance.currentUser!.uid;
-                      await writeToDatabase(currentUID, context);
-                      backingUp.value = false;
-                    },
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    fillColor: const Color.fromRGBO(40, 40, 40, 1),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                    child: ValueListenableBuilder(
-                        valueListenable: backingUp,
-                        builder: (context, value, child) {
-                          return value
-                              ? const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 30),
-                                  child: Center(
-                                    child: LinearProgressIndicator(
-                                      color: Colors.blueAccent,
-                                    ),
-                                  ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                      Icon(
-                                        Icons.cloud_upload_outlined,
-                                        color: Colors.blueAccent,
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text("Sync Habits",
-                                          style: TextStyle(
+                  ValueListenableBuilder(
+                    valueListenable: signingOut,
+                    builder: (context, value, child) {
+                      return IgnorePointer(
+                        ignoring: value,
+                        child: RawMaterialButton(
+                          onPressed: () async {
+                            if (backingUp.value) return;
+                            backingUp.value = true;
+                            final currentUID = FirebaseAuth.instance.currentUser!.uid;
+                            final context_2 = context;
+                            writeToDatabase(currentUID, context_2).then((value) {
+                              backingUp.value = false;
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Synced Successfully!"),
+                                duration: Duration(seconds: 2),
+                              ));
+                            });
+                          },
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          fillColor: const Color.fromRGBO(40, 40, 40, 1),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0)),
+                          child: ValueListenableBuilder(
+                              valueListenable: backingUp,
+                              builder: (context, value, child) {
+                                return value
+                                    ? const Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 30),
+                                        child: Center(
+                                          child: LinearProgressIndicator(
+                                            color: Colors.blueAccent,
+                                          ),
+                                        ),
+                                      )
+                                    : Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: const [
+                                            Icon(
+                                              Icons.cloud_upload_outlined,
                                               color: Colors.blueAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600)),
-                                    ]);
-                        }),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Text("Sync Habits",
+                                                style: TextStyle(
+                                                    color: Colors.blueAccent,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600)),
+                                          ]);
+                              }),
+                        ),
+                      );
+                    }
                   ),
                   const SizedBox(height: 15),
                   Consumer<SharedState>(
@@ -209,6 +222,7 @@ class Profile extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                             onPressed: () async {
                               try {
+                                signingOut.value = true;
                                 final currentUID =
                                     FirebaseAuth.instance.currentUser!.uid;
                                 await writeToDatabase(currentUID, context);
@@ -229,20 +243,36 @@ class Profile extends StatelessWidget {
                             fillColor: const Color.fromRGBO(40, 40, 40, 1),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0)),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.redAccent.shade200,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text("Sign Out",
-                                      style: TextStyle(
-                                          color: Colors.redAccent.shade200,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600)),
-                                ]),
+                            child: ValueListenableBuilder(
+                                valueListenable: signingOut,
+                                builder: (context, value, child) {
+                                  return value
+                                      ? const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 30),
+                                          child: Center(
+                                            child: LinearProgressIndicator(),
+                                          ),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                              Icon(
+                                                Icons.arrow_back,
+                                                color:
+                                                    Colors.redAccent.shade200,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text("Sign Out",
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .redAccent.shade200,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600)),
+                                            ]);
+                                }),
                           ),
                         );
                       }),

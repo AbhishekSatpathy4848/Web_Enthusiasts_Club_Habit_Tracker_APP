@@ -59,7 +59,8 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.grey[900],
         title: Text(
           "Habit Tracker",
-          style: TextStyle(color: Colors.amberAccent[200]),
+          style: TextStyle(
+              color: Colors.amberAccent[200], fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         // actions: [

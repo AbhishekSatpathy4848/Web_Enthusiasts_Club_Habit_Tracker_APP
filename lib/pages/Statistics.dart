@@ -24,9 +24,9 @@ class _StatsState extends State<Stats> {
             children: [
               Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: const ProgressRateChart()),
               const SizedBox(height: 15),
-              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: SuccessRateChart()),
+              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: const SuccessRateChart()),
               const SizedBox(height: 15),
-              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: StreakViewWidget())
+              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0),color: Colors.grey[900]),child: const StreakViewWidget())
             ],
           ),  
         ),
