@@ -35,12 +35,16 @@ dependencies:
   cron: ^0.5.1
   cupertino_icons: ^1.0.2
   date_format: ^2.0.7
-  firebase_auth: ^4.5.0
+  device_info_plus: ^9.0.0
+  firebase_analytics: ^10.4.1
+  firebase_auth: ^4.4.0
   firebase_core: ^2.11.0
   firebase_database: ^10.1.2
+  firebase_messaging: ^14.6.0
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3
+  flutter_local_notifications: ^14.0.0+1
   fluttertoast: ^8.1.1
   hive: ^2.0.3
   hive_flutter: ^1.0.0
@@ -75,7 +79,8 @@ flutter:
     - images/Fire.png
     - images/BackgroundStars.jpeg
     - lottie/congratulations_lottie.json
-
+    - lottie/bell_lottie.json
+    - lottie/loading_lottie.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see
@@ -85,12 +90,12 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Open Sans
-      fonts:
-        - asset: fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf
-    - family: Open Sans-2
-      fonts:
-        - asset: fonts/OpenSans-VariableFont_wdth,wght.ttf
+  # fonts:
+  #   - family: Open Sans
+  #     fonts:
+  #       - asset: fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf
+  #   - family: Open Sans-2
+  #     fonts:
+  #       - asset: fonts/OpenSans-VariableFont_wdth,wght.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
