@@ -85,8 +85,6 @@ https://user-images.githubusercontent.com/108116233/199285394-547d8df4-bac2-4ae1
 ## List of Planned Features
 - Reward the user with Points/Badges for completing habits and breaking streaks records. 
 - Run a timer for each habit and increment habit count after that interval.
-- Incorporating Local Notifications to remind the user to complete his habits everyday.
-- Improve Code Quality and Readability.
 
 ## List of known Bugs
 - The UI doesn't scale appropriately in some devices.
